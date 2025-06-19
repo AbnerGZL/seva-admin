@@ -7,7 +7,7 @@ const Nota = sequelize.define('Nota', {
     primaryKey: true,
     autoIncrement: true,
   },
-  ID_ESTUDIANTE: {
+  ID_MATRICULA: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
@@ -15,8 +15,20 @@ const Nota = sequelize.define('Nota', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
-  NOTA: {
-    type: DataTypes.INTEGER,
+  PROMEDIOP: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+  },
+  PROMEDIOT: {
+    type: DataTypes.DECIMAL(10, 2),
+    allowNull: false,
+  },
+  CONDICION: {
+    type: DataTypes.STRING(20),
+    allowNull: false,
+  },
+  ESTATUS: {
+    type: DataTypes.BOOLEAN,
     allowNull: false,
   },
   FECHA_CREACION: {
@@ -25,10 +37,6 @@ const Nota = sequelize.define('Nota', {
   },
   FECHA_MODIFICACION: {
     type: DataTypes.DATE,
-    allowNull: false,
-  },
-  ESTATUS: {
-    type: DataTypes.BOOLEAN,
     allowNull: false,
   },
 }, {

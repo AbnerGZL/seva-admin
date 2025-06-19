@@ -85,7 +85,7 @@ Matricula.hasMany(Pago, {
 
 Matricula.hasMany(Nota, {
   foreignKey: 'ID_MATRICULA',
-  as: 'notas',
+  as: 'nota',
 });
 
 Matricula.hasMany(Asistencia, {
