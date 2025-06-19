@@ -1,0 +1,26 @@
+<%- include('../partials/header') %>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Editar Carrera</h1>
+
+  <form action="/carreras/editar/<%= carrera.ID_CARRERA %>" method="POST" class="bg-white p-6 rounded-lg shadow max-w-lg">
+    <% if (error) { %>
+      <div class="text-red-500 mb-4"><%= error %></div>
+    <% } %>
+
+    <div class="mb-4"><label>Nombre</label><input name="NOMBRE" required class="w-full border px-3 py-2 rounded" value="<%= carrera.NOMBRE %>"></div>
+    <div class="mb-4"><label>Código</label><input name="CODIGOCA" required class="w-full border px-3 py-2 rounded" value="<%= carrera.CODIGOCA %>"></div>
+    <div class="mb-4"><label>Descripción</label><input name="DESCRIPCION" required class="w-full border px-3 py-2 rounded" value="<%= carrera.DESCRIPCION %>"></div>
+    <div class="mb-4"><label>Duración</label><input name="DURACION" required class="w-full border px-3 py-2 rounded" value="<%= carrera.DURACION %>"></div>
+    <div class="mb-4"><label>Total Créditos</label><input name="TOTAL_CREDITOS" type="number" required class="w-full border px-3 py-2 rounded" value="<%= carrera.TOTAL_CREDITOS %>"></div>
+    <div class="mb-4"><label>Título</label><input name="TITULO" required class="w-full border px-3 py-2 rounded" value="<%= carrera.TITULO %>"></div>
+    <div class="mb-4"><label>Grado</label><input name="GRADO" required class="w-full border px-3 py-2 rounded" value="<%= carrera.GRADO %>"></div>
+    <div class="mb-4"><label>Departamento</label><input name="DEPARTAMENTO" required class="w-full border px-3 py-2 rounded" value="<%= carrera.DEPARTAMENTO %>"></div>
+    <div class="mb-4"><label>Modalidad</label><input name="MODALIDAD" required class="w-full border px-3 py-2 rounded" value="<%= carrera.MODALIDAD %>"></div>
+
+    <div class="flex justify-end">
+      <a href="/carreras" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancelar</a>
+      <button type="submit" class="bg-green-600 text-white px-4 py-2 rounded">Guardar Cambios</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,79 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Panel de Administración</title>
+  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
+</head>
+<body class="bg-gray-100">
+  <div class="container mx-auto px-4 py-8">
+    <h1 class="text-3xl font-bold mb-8">Panel de Administración</h1>
+    
+    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
+      <!-- Estudiantes -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-2">Estudiantes</h2>
+        <p class="text-4xl font-bold text-blue-600"><%= totalEstudiantes %></p>
+        <a href="/estudiantes" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
+      </div>
+
+      <!-- Cursos -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-2">Cursos</h2>
+        <p class="text-4xl font-bold text-green-600"><%= totalCursos %></p>
+        <a href="/cursos" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
+      </div>
+
+      <!-- Profesores -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-2">Profesores</h2>
+        <p class="text-4xl font-bold text-purple-600"><%= totalProfesores %></p>
+        <a href="/profesores" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
+      </div>
+
+      <!-- Usuarios -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-2">Usuarios</h2>
+        <p class="text-4xl font-bold text-yellow-600"><%= totalUsuarios %></p>
+        <a href="/usuarios" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
+      </div>
+
+      <!-- Tipos de Usuario -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-2">Tipos de Usuario</h2>
+        <p class="text-4xl font-bold text-pink-600"><%= totalTipos %></p>
+        <a href="/tipos" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
+      </div>
+
+      <!-- Datos Estudiantes -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-2">Datos Estudiantes</h2>
+        <p class="text-4xl font-bold text-indigo-600"><%= totalDatosEstudiantes %></p>
+        <a href="/datos" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
+      </div>
+
+      <!-- Carreras -->
+      <div class="bg-white rounded-lg shadow p-6">
+        <h2 class="text-xl font-semibold mb-2">Carreras</h2>
+        <p class="text-4xl font-bold text-red-600"><%= totalCarreras %></p>
+        <a href="/carreras" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
+      </div>
+    </div>
+
+    <!-- Acciones Rápidas -->
+    <div class="bg-white rounded-lg shadow p-6">
+      <h2 class="text-xl font-semibold mb-4">Acciones Rápidas</h2>
+      <div class="flex flex-wrap gap-4">
+        <a href="/usuarios/crear" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Nuevo Usuario</a>
+        <a href="/estudiantes/crear" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Nuevo Estudiante</a>
+        <a href="/cursos/crear" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded">Nuevo Curso</a>
+        <a href="/profesores/crear" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Nuevo Profesor</a>
+        <a href="/datos/crear" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded">Nuevo Dato Estudiante</a>
+        <a href="/tipos/crear" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded">Nuevo Tipo Usuario</a>
+        <a href="/carreras/crear" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Nueva Carrera</a>
+      </div>
+    </div>
+  </div>
+</body>
+</html>

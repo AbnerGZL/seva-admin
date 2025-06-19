@@ -1,0 +1,41 @@
+<%- include('../partials/header') %>
+<h1>Usuarios</h1>
+<a href="/usuarios/crear">Nuevo Usuario</a>
+
+<table>
+  <thead>
+    <tr>
+      <th>ID</th>
+      <th>Email</th>
+      <th>Tipo</th>
+      <th>Status</th>
+      <th>Acciones</th>
+    </tr>
+  </thead>
+  <tbody>
+    <% if (usuarios && usuarios.length > 0) { %>
+      <% usuarios.forEach(usuario => { %>
+        <tr>
+          <td><%= usuario.ID_USUARIO %></td>
+          <td><%= usuario.EMAIL %></td>
+          <td><%= usuario.tipo ? usuario.tipo.NOMBRE : 'Sin tipo' %></td>
+          <td>
+            <% if (usuario.ESTATUS) { %>
+              <span class="text-green-600 font-semibold">Activo</span>
+            <% } else { %>
+              <span class="text-red-600 font-semibold">Inactivo</span>
+            <% } %>
+          </td>
+          <td>
+            <a href="/usuarios/editar/<%= usuario.ID_USUARIO %>">✏️</a>
+            <a href="/usuarios/eliminar/<%= usuario.ID_USUARIO %>">🗑️</a>
+          </td>
+        </tr>
+      <% }); %>
+    <% } else { %>
+      <tr>
+        <td colspan="4">No hay usuarios registrados</td>
+      </tr>
+    <% } %>
+  </tbody>
+</table>

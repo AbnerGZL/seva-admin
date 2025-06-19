@@ -1,0 +1,23 @@
+<%- include('../partials/header') %>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Editar Profesor</h1>
+
+  <form action="/profesores/editar/<%= profesor.ID_PROFESOR %>" method="POST" class="max-w-md bg-white p-6 rounded-lg shadow">
+    <% if (error) { %>
+      <div class="text-red-500 mb-4"><%= error %></div>
+    <% } %>
+
+    <div class="mb-4"><label>Nombres</label><input name="NOMBRES" required value="<%= profesor.NOMBRES %>" class="w-full border px-3 py-2 rounded"></div>
+    <div class="mb-4"><label>Apellidos</label><input name="APELLIDOS" required value="<%= profesor.APELLIDOS %>" class="w-full border px-3 py-2 rounded"></div>
+    <div class="mb-4"><label>Especialidad</label><input name="ESPECIALIDAD" required value="<%= profesor.ESPECIALIDAD %>" class="w-full border px-3 py-2 rounded"></div>
+    <div class="mb-4"><label>Teléfono</label><input name="TELEFONO" required value="<%= profesor.TELEFONO %>" class="w-full border px-3 py-2 rounded"></div>
+    <div class="mb-6"><label>DNI</label><input name="DNI" required value="<%= profesor.DNI %>" class="w-full border px-3 py-2 rounded"></div>
+    <div class="mb-6"><label>Correo</label><input name="CORREO" required value="<%= profesor.CORREO %>" class="w-full border px-3 py-2 rounded"></div>
+
+    <div class="flex justify-end">
+      <a href="/profesores" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancelar</a>
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Guardar</button>
+    </div>
+  </form>
+</div>

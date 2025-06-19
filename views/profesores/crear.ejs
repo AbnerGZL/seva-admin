@@ -1,0 +1,74 @@
+<%- include('../partials/header') %>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Registrar Profesor</h1>
+
+  <form action="/profesores/crear" method="POST" class="max-w-md bg-white p-6 rounded-lg shadow">
+    <% if (error) { %>
+      <div class="text-red-500 mb-4"><%= error %></div>
+    <% } %>
+
+    <div class="mb-4">
+      <label for="ID_USUARIO" class="block mb-1">Usuario</label>
+      <select name="ID_USUARIO" id="ID_USUARIO" required class="w-full border px-3 py-2 rounded" onchange="actualizarCorreo()">
+        <% if (usuarios.length === 0) { %>
+          <option disabled selected>No hay usuarios disponibles</option>
+        <% } else { %>
+          <% usuarios.forEach(usuario => { %>
+            <option value="<%= usuario.ID_USUARIO %>" data-email="<%= usuario.EMAIL %>"
+              <%= (formData && formData.ID_USUARIO == usuario.ID_USUARIO) ? 'selected' : '' %>>
+              <%= usuario.EMAIL %> - <%= usuario.tipo ? usuario.tipo.NOMBRE : '' %>
+            </option>
+          <% }) %>
+        <% } %>
+      </select>
+    </div>
+
+    <div class="mb-4">
+      <label for="NOMBRES" class="block mb-1">Nombres</label>
+      <input name="NOMBRES" required value="<%= formData?.NOMBRES || '' %>" class="w-full border px-3 py-2 rounded">
+    </div>
+
+    <div class="mb-4">
+      <label for="APELLIDOS" class="block mb-1">Apellidos</label>
+      <input name="APELLIDOS" required value="<%= formData?.APELLIDOS || '' %>" class="w-full border px-3 py-2 rounded">
+    </div>
+
+    <div class="mb-4">
+      <label for="ESPECIALIDAD" class="block mb-1">Especialidad</label>
+      <input name="ESPECIALIDAD" required value="<%= formData?.ESPECIALIDAD || '' %>" class="w-full border px-3 py-2 rounded">
+    </div>
+
+    <div class="mb-4">
+      <label for="TELEFONO" class="block mb-1">Teléfono</label>
+      <input name="TELEFONO" required value="<%= formData?.TELEFONO || '' %>" class="w-full border px-3 py-2 rounded">
+    </div>
+
+    <!-- Campo oculto de CORREO -->
+    <input type="hidden" name="CORREO" id="CORREO" value="<%= formData?.CORREO || '' %>">
+
+    <div class="mb-4">
+      <label class="block mb-1">Correo</label>
+      <input type="text" id="correoVisible" disabled class="w-full border px-3 py-2 rounded text-gray-500 bg-gray-100" value="<%= formData?.CORREO || '' %>">
+    </div>
+
+    <div class="flex justify-end">
+      <a href="/profesores" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancelar</a>
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Crear</button>
+    </div>
+  </form>
+</div>
+
+<script>
+  function actualizarCorreo() {
+    const select = document.getElementById('ID_USUARIO');
+    const selectedOption = select.options[select.selectedIndex];
+    const email = selectedOption.getAttribute('data-email');
+
+    document.getElementById('CORREO').value = email;
+    document.getElementById('correoVisible').value = email;
+  }
+
+  // Llamar una vez al cargar la página por si hay valor seleccionado
+  actualizarCorreo();
+</script>

@@ -1,0 +1,19 @@
+<%- include('../partials/header') %>
+
+<div class="container mx-auto py-8">
+  <h2 class="text-xl font-bold mb-4">Crear Tipo de Usuario</h2>
+
+  <% if (error) { %>
+    <div class="text-red-500 mb-4"><%= error %></div>
+  <% } %>
+
+  <form action="/tipos/crear" method="POST" class="max-w-md">
+    <input type="text" name="NOMBRE" placeholder="Nombre" required
+      value="<%= formData?.NOMBRE || '' %>"
+      class="w-full border px-3 py-2 mb-4 rounded">
+    <div class="flex justify-end">
+      <a href="/tipos" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancelar</a>
+      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Crear</button>
+    </div>
+  </form>
+</div>

@@ -1,0 +1,13 @@
+<h2>Error</h2>
+
+<% if (typeof mensaje !== 'undefined' && mensaje) { %>
+  <p><%= mensaje %></p>
+<% } else { %>
+  <p>Ha ocurrido un error inesperado.</p>
+<% } %>
+
+<% if (typeof usuario !== 'undefined' && usuario) { %>
+  <a href="/">Volver al inicio</a>
+<% } else { %>
+  <a href="/login">Ir al login</a>
+<% } %>

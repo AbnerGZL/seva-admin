@@ -1,0 +1,37 @@
+<%- include('../partials/header') %>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Listado de Carreras</h1>
+
+  <a href="/carreras/crear" class="bg-blue-500 text-white px-4 py-2 rounded mb-4 inline-block">Registrar Nueva Carrera</a>
+
+  <table class="min-w-full bg-white shadow-md rounded">
+    <thead>
+      <tr class="bg-gray-100">
+        <th class="py-2 px-4">Código</th>
+        <th class="py-2 px-4">Nombre</th>
+        <th class="py-2 px-4">Duración</th>
+        <th class="py-2 px-4">Créditos</th>
+        <th class="py-2 px-4">Modalidad</th>
+        <th class="py-2 px-4">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% carreras.forEach(carrera => { %>
+        <tr class="border-t">
+          <td class="py-2 px-4"><%= carrera.CODIGOCA %></td>
+          <td class="py-2 px-4"><%= carrera.NOMBRE %></td>
+          <td class="py-2 px-4"><%= carrera.DURACION %></td>
+          <td class="py-2 px-4"><%= carrera.TOTAL_CREDITOS %></td>
+          <td class="py-2 px-4"><%= carrera.MODALIDAD %></td>
+          <td class="py-2 px-4 flex gap-2">
+            <a href="/carreras/editar/<%= carrera.ID_CARRERA %>" class="text-blue-500">Editar</a>
+            <form action="/carreras/eliminar/<%= carrera.ID_CARRERA %>" method="POST" onsubmit="return confirm('¿Eliminar carrera?')">
+              <button class="text-red-500" type="submit">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

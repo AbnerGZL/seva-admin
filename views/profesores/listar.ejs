@@ -1,0 +1,47 @@
+<%- include('../partials/header') %>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Lista de Profesores</h1>
+
+  <a href="/profesores/crear" class="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block">Nuevo Profesor</a>
+
+  <table class="table-auto w-full">
+    <thead>
+      <tr>
+        <th>Nombres</th>
+        <th>Apellidos</th>
+        <th>Especialidad</th>
+        <th>Email</th>
+        <th>Teléfono</th>
+        <th>Estatus</th>
+        <th>DNI</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% profesores.forEach(profesor => { %>
+        <tr>
+          <td><%= profesor.NOMBRES %></td>
+          <td><%= profesor.APELLIDOS %></td>
+          <td><%= profesor.ESPECIALIDAD %></td>
+          <td><%= profesor.CORREO %></td>
+          <td><%= profesor.TELEFONO %></td>
+          <td>
+            <% if (profesor.ESTATUS) { %>
+              <span class="text-green-600 font-semibold">Activo</span>
+            <% } else { %>
+              <span class="text-red-600 font-semibold">Inactivo</span>
+            <% } %>
+          </td>
+          <td><%= profesor.DNI %></td>
+          <td>
+            <a href="/profesores/editar/<%= profesor.ID_PROFESOR %>" class="text-blue-600 hover:underline">Editar</a>
+            <form action="/profesores/eliminar/<%= profesor.ID_PROFESOR %>" method="POST" style="display:inline;">
+              <button type="submit" class="text-red-600 hover:underline ml-2">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

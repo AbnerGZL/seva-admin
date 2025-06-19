@@ -1,0 +1,50 @@
+<%- include('../partials/header') %>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Estudiantes Registrados</h1>
+
+  <a href="/profesores/crear" class="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block">Nuevo Estudiante</a>
+  <% if (estudiantes.length === 0) { %>
+    <p>No hay estudiantes registrados.</p>
+  <% } else { %>
+    <table class="table-auto w-full border border-collapse">
+      <thead>
+          <tr>
+            <th class="border px-4 py-2">Nombres</th>
+            <th class="border px-4 py-2">Apellidos</th>
+            <th class="border px-4 py-2">DNI</th>
+            <th class="border px-4 py-2">Correo</th>
+            <th class="border px-4 py-2">Carrera</th>
+            <th class="border px-4 py-2">Estado</th>
+            <th class="border px-4 py-2">Estatus</th>
+            <th class="border px-4 py-2">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% estudiantes.forEach(est => { %>
+            <tr>
+              <td class="border px-4 py-2"><%= est.NOMBRES %></td>
+              <td class="border px-4 py-2"><%= est.APELLIDOS %></td>
+              <td class="border px-4 py-2"><%= est.DNI %></td>
+              <td class="border px-4 py-2"><%= est.CORREO %></td>
+              <td class="border px-4 py-2"><%= est.CARRERA %></td>
+              <td class="border px-4 py-2"><%= est.ESTADO %></td>
+              <td>
+                <% if (est.ESTATUS) { %>
+                  <span class="text-green-600 font-semibold">Activo</span>
+                <% } else { %>
+                  <span class="text-red-600 font-semibold">Inactivo</span>
+                <% } %>
+              </td>
+              <td class="border px-4 py-2 flex space-x-2">
+                <a href="/estudiantes/editar/<%= est.ID_ESTUDIANTE %>" class="bg-yellow-400 hover:bg-yellow-500 text-white px-2 py-1 rounded">Editar</a>
+                <form action="/estudiantes/eliminar/<%= est.ID_ESTUDIANTE %>" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este estudiante?');">
+                  <button type="submit" class="bg-red-500 hover:bg-red-600 text-white px-2 py-1 rounded">Eliminar</button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+    </table>
+  <% } %>
+</div>

@@ -1,0 +1,37 @@
+<%- include('../partials/header') %>
+
+<div class="container mx-auto px-4 py-8">
+  <h1 class="text-2xl font-bold mb-6">Listado de Cursos</h1>
+
+  <a href="/cursos/crear" class="bg-green-600 text-white px-4 py-2 rounded mb-4 inline-block">Nuevo Curso</a>
+
+  <table class="min-w-full table-auto border">
+    <thead>
+      <tr class="bg-gray-200">
+        <th class="px-4 py-2">Código</th>
+        <th class="px-4 py-2">Nombre</th>
+        <th class="px-4 py-2">Profesor</th>
+        <th class="px-4 py-2">Créditos</th>
+        <th class="px-4 py-2">Duración</th>
+        <th class="px-4 py-2">Horas</th>
+        <th class="px-4 py-2">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% cursos.forEach(curso => { %>
+        <tr class="border-t">
+          <td class="px-4 py-2"><%= curso.CODIGOCU %></td>
+          <td class="px-4 py-2"><%= curso.NOMBRE %></td>
+          <td class="px-4 py-2"><%= curso.profesor?.NOMBRES %> <%= curso.profesor?.APELLIDOS %></td>
+          <td class="px-4 py-2"><%= curso.CREDITOS %></td>
+          <td class="px-4 py-2"><%= curso.DURACION %></td>
+          <td class="px-4 py-2"><%= curso.HORAS %></td>
+          <td class="px-4 py-2">
+            <a href="/cursos/editar/<%= curso.ID_CURSO %>" class="text-blue-600 hover:underline mr-2">Editar</a>
+            <a href="/cursos/eliminar/<%= curso.ID_CURSO %>" class="text-red-600 hover:underline">Eliminar</a>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>

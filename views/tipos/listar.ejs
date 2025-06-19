@@ -1,0 +1,38 @@
+<%- include('../partials/header') %>
+
+<div class="container mx-auto py-8">
+  <h1 class="text-2xl font-bold mb-6">Tipos de Usuario</h1>
+  <a href="/tipos/crear" class="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block">Nuevo Tipo</a>
+
+  <table class="table-auto w-full border">
+    <thead>
+      <tr>
+        <th class="border px-4 py-2">ID</th>
+        <th class="border px-4 py-2">Nombre</th>
+        <th class="border px-4 py-2">Status</th>
+        <th class="border px-4 py-2">Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      <% tipos.forEach(tipo => { %>
+        <tr>
+          <td class="border px-4 py-2"><%= tipo.ID_TIPO %></td>
+          <td class="border px-4 py-2"><%= tipo.NOMBRE %></td>
+          <td class="border px-4 py-2">
+            <% if (tipo.ESTATUS) { %>
+              <span class="text-green-600 font-semibold">Activo</span>
+            <% } else { %>
+              <span class="text-red-600 font-semibold">Inactivo</span>
+            <% } %>
+          </td>
+          <td class="border px-4 py-2">
+            <a href="/tipos/editar/<%= tipo.ID_TIPO %>" class="text-blue-600">Editar</a>
+            <form action="/tipos/eliminar/<%= tipo.ID_TIPO %>" method="POST" class="inline">
+              <button type="submit" class="text-red-600 ml-2">Eliminar</button>
+            </form>
+          </td>
+        </tr>
+      <% }) %>
+    </tbody>
+  </table>
+</div>
