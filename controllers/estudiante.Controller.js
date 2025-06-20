@@ -1,4 +1,4 @@
-const { Estudiante, Usuario, TipoUsuario, Profesor } = require('../models');
+const { Estudiante, Usuario, TipoUsuario, Profesor, Carrera } = require('../models');
 
 module.exports = {
   listar: async (req, res) => {
@@ -34,14 +34,22 @@ module.exports = {
             model: Profesor,
             as: 'profesor',
             required: false
+          },
+          {
+            model: Estudiante,
+            as: 'estudiante',
+            required: false
           }
         ]
       });
 
-      const usuarios = todos.filter(usuario => !usuario.profesor);
+      // Solo usuarios tipo 'Estudiante' que no están asociados a Profesor ni Estudiante
+      const usuarios = todos.filter(usuario => !usuario.profesor && !usuario.estudiante);
+      const carreras = await Carrera.findAll();
 
       res.render('estudiantes/crear', {
         usuarios,
+        carreras,
         formData: null,
         error: null
       });
@@ -56,11 +64,15 @@ module.exports = {
 
     try {
       const usuario = await Usuario.findByPk(ID_USUARIO, {
-        include: ['profesor']
+        include: ['profesor', 'estudiante']
       });
 
       if (usuario.profesor) {
         throw new Error('Este usuario ya está registrado como profesor');
+      }
+
+      if (usuario.estudiante) {
+        throw new Error('Este usuario ya está registrado como estudiante');
       }
 
       await Estudiante.create({
@@ -78,8 +90,8 @@ module.exports = {
 
       res.redirect('/estudiantes');
     } catch (error) {
-      console.error('Error al crear estudiante:', error);
-
+      console.error('Error al crear estudiante:', error.message);
+      const carreras = await Carrera.findAll();
       const todos = await Usuario.findAll({
         where: { ESTATUS: 1 },
         include: [
@@ -92,14 +104,20 @@ module.exports = {
             model: Profesor,
             as: 'profesor',
             required: false
+          },
+          {
+            model: Estudiante,
+            as: 'estudiante',
+            required: false
           }
         ]
       });
 
-      const usuarios = todos.filter(usuario => !usuario.profesor);
+      const usuarios = todos.filter(usuario => !usuario.profesor && !usuario.estudiante);
 
       res.render('estudiantes/crear', {
         usuarios,
+        carreras,
         formData: req.body,
         error: error.message
       });
@@ -110,6 +128,7 @@ module.exports = {
     try {
       const estudiante = await Estudiante.findByPk(req.params.id);
       const usuarios = await Usuario.findAll({ where: { ESTATUS: 1 } });
+      const carreras = await Carrera.findAll();
 
       if (!estudiante) {
         return res.render('error', { mensaje: 'Estudiante no encontrado' });
@@ -118,6 +137,7 @@ module.exports = {
       res.render('estudiantes/editar', {
         estudiante,
         usuarios,
+        carreras,
         error: null
       });
     } catch (error) {
@@ -149,10 +169,12 @@ module.exports = {
       console.error(error);
       const estudiante = await Estudiante.findByPk(req.params.id);
       const usuarios = await Usuario.findAll({ where: { ESTATUS: 1 } });
+      const carreras = await Carrera.findAll();
 
       res.render('estudiantes/editar', {
         estudiante,
         usuarios,
+        carreras,
         error: 'Error al actualizar estudiante'
       });
     }

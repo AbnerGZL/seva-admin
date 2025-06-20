@@ -43,14 +43,16 @@ module.exports = {
       }
     
       // Validar tipo de usuario permitido
-      if (parseInt(ID_TIPO) !== 2 && parseInt(ID_TIPO) !== 3) {
+      const tipo = await TipoUsuario.findByPk(ID_TIPO);
+      if (!tipo || !['Estudiante', 'Profesor', 'Admin'].includes(tipo.NOMBRE)) {
         const tipos = await TipoUsuario.findAll();
         return res.render('usuarios/crear', {
           tipos,
           formData: req.body,
-          error: 'Tipo de usuario no válido para esta operación'
+          error: 'Tipo de usuario no válido'
         });
       }
+
     
       // Verificar si el email ya existe
       const usuarioExistente = await Usuario.findOne({ where: { EMAIL } });

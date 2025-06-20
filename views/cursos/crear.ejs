@@ -1,34 +1,82 @@
-<%- include('../partials/header') %>
+<%- include('../partials/header', { title: 'Registrar Curso' }) %>
+<%- include('../partials/navbar') %>
 
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-2xl font-bold mb-6">Registrar Curso</h1>
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+      <i class="fas fa-book-medical text-green-600"></i> Registrar Curso
+    </h1>
 
-  <form action="/cursos/crear" method="POST" class="max-w-md bg-white p-6 rounded-lg shadow">
-    <% if (error) { %>
-      <div class="text-red-500 mb-4"><%= error %></div>
-    <% } %>
+    <form action="/cursos/crear" method="POST" class="space-y-4">
+      <% if (error) { %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <%= error %>
+        </div>
+      <% } %>
 
-    <div class="mb-4">
-      <label class="block mb-1">Profesor</label>
-      <select name="ID_PROFESOR" required class="w-full px-3 py-2 border rounded">
-        <% profesores.forEach(p => { %>
-          <option value="<%= p.ID_PROFESOR %>" <%= formData?.ID_PROFESOR == p.ID_PROFESOR ? 'selected' : '' %>>
-            <%= p.NOMBRES %> <%= p.APELLIDOS %>
-          </option>
-        <% }) %>
-      </select>
-    </div>
+      <!-- Profesor -->
+      <div>
+        <label class="block text-gray-700 mb-1">Profesor</label>
+        <select name="ID_PROFESOR" required class="w-full px-3 py-2 border border-gray-300 rounded">
+          <% profesores.forEach(p => { %>
+            <option value="<%= p.ID_PROFESOR %>" <%= formData?.ID_PROFESOR == p.ID_PROFESOR ? 'selected' : '' %>>
+              <%= p.NOMBRES %> <%= p.APELLIDOS %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
 
-    <div class="mb-4"><label>Código</label><input name="CODIGOCU" required value="<%= formData?.CODIGOCU || '' %>" class="w-full border px-3 py-2 rounded"></div>
-    <div class="mb-4"><label>Nombre</label><input name="NOMBRE" required value="<%= formData?.NOMBRE || '' %>" class="w-full border px-3 py-2 rounded"></div>
-    <div class="mb-4"><label>Descripción</label><input name="DESCRIPCION" required value="<%= formData?.DESCRIPCION || '' %>" class="w-full border px-3 py-2 rounded"></div>
-    <div class="mb-4"><label>Créditos</label><input name="CREDITOS" type="number" required value="<%= formData?.CREDITOS || '' %>" class="w-full border px-3 py-2 rounded"></div>
-    <div class="mb-4"><label>Duración</label><input name="DURACION" required value="<%= formData?.DURACION || '' %>" class="w-full border px-3 py-2 rounded"></div>
-    <div class="mb-6"><label>Horas</label><input name="HORAS" type="number" required value="<%= formData?.HORAS || '' %>" class="w-full border px-3 py-2 rounded"></div>
+      <!-- Código -->
+      <div>
+        <label class="block text-gray-700 mb-1">Código</label>
+        <input type="text" name="CODIGOCU" required value="<%= formData?.CODIGOCU || '' %>"
+          class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
 
-    <div class="flex justify-end">
-      <a href="/cursos" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancelar</a>
-      <button type="submit" class="bg-blue-500 text-white px-4 py-2 rounded">Crear</button>
-    </div>
-  </form>
+      <!-- Nombre -->
+      <div>
+        <label class="block text-gray-700 mb-1">Nombre</label>
+        <input type="text" name="NOMBRE" required value="<%= formData?.NOMBRE || '' %>"
+          class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+      <!-- Descripción -->
+      <div>
+        <label class="block text-gray-700 mb-1">Descripción</label>
+        <input type="text" name="DESCRIPCION" required value="<%= formData?.DESCRIPCION || '' %>"
+          class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+      <!-- Créditos -->
+      <div>
+        <label class="block text-gray-700 mb-1">Créditos</label>
+        <input type="number" name="CREDITOS" required value="<%= formData?.CREDITOS || '' %>"
+          class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+      <!-- Duración -->
+      <div>
+        <label class="block text-gray-700 mb-1">Duración</label>
+        <input type="text" name="DURACION" required value="<%= formData?.DURACION || '' %>"
+          class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+      <!-- Horas -->
+      <div>
+        <label class="block text-gray-700 mb-1">Horas</label>
+        <input type="number" name="HORAS" required value="<%= formData?.HORAS || '' %>"
+          class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+      <!-- Botones -->
+      <div class="flex justify-end space-x-2 pt-4">
+        <a href="/cursos" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+          Cancelar
+        </a>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+          Crear Curso
+        </button>
+      </div>
+    </form>
+  </div>
 </div>

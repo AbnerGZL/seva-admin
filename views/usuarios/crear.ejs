@@ -1,55 +1,69 @@
-<%- include('../partials/header') %>
+<%- include('../partials/header', { title: 'Crear Usuario' }) %>
+<%- include('../partials/navbar') %>
 
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-2xl font-bold mb-6">Crear Nuevo Usuario</h1>
+<div class="max-w-4xl mx-auto mt-8">
+  <div class="bg-white p-6 rounded-lg shadow">
+    <div class="mb-6 flex justify-between items-center">
+      <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+        <i class="fas fa-user-plus text-blue-600"></i> Crear Nuevo Usuario
+      </h1>
+      <a href="/usuarios" class="text-sm text-blue-600 hover:underline">
+        ← Volver a la lista
+      </a>
+    </div>
 
-  <form action="/usuarios/crear" method="POST" class="max-w-md bg-white p-6 rounded-lg shadow">
     <% if (typeof error !== 'undefined' && error) { %>
       <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
         <%= error %>
       </div>
     <% } %>
 
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2" for="ID_TIPO">Tipo de Usuario</label>
-      <select name="ID_TIPO" id="ID_TIPO" required
-        class="w-full px-3 py-2 border rounded">
-        <% tipos.forEach(tipo => { %>
-          <option value="<%= tipo.ID_TIPO %>" 
-            <%= (formData && formData.ID_TIPO == tipo.ID_TIPO) ? 'selected' : '' %>>
-            <%= tipo.NOMBRE %>
-          </option>
-        <% }); %>
-      </select>
-    </div>
+    <form action="/usuarios/crear" method="POST" class="space-y-5">
+      <!-- Tipo de Usuario -->
+      <div>
+        <label for="ID_TIPO" class="block mb-1 text-gray-700 font-medium">Tipo de Usuario</label>
+        <select id="ID_TIPO" name="ID_TIPO" required class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-100">
+          <% tipos.forEach(tipo => { %>
+            <option value="<%= tipo.ID_TIPO %>" 
+              <%= (formData && formData.ID_TIPO == tipo.ID_TIPO) ? 'selected' : '' %>>
+              <%= tipo.NOMBRE %>
+            </option>
+          <% }); %>
+        </select>
+      </div>
 
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2" for="CODIGOU">Código</label>
-      <input type="text" name="CODIGOU" id="CODIGOU" required
-        value="<%= formData ? formData.CODIGOU : '' %>"
-        class="w-full px-3 py-2 border rounded">
-    </div>
+      <!-- Código -->
+      <div>
+        <label for="CODIGOU" class="block mb-1 text-gray-700 font-medium">Código</label>
+        <input type="text" id="CODIGOU" name="CODIGOU" required
+          value="<%= formData ? formData.CODIGOU : '' %>"
+          class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-100">
+      </div>
 
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2" for="EMAIL">Email</label>
-      <input type="email" name="EMAIL" id="EMAIL" required
-        value="<%= formData ? formData.EMAIL : '' %>"
-        class="w-full px-3 py-2 border rounded">
-    </div>
+      <!-- Email -->
+      <div>
+        <label for="EMAIL" class="block mb-1 text-gray-700 font-medium">Email</label>
+        <input type="email" id="EMAIL" name="EMAIL" required
+          value="<%= formData ? formData.EMAIL : '' %>"
+          class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-100">
+      </div>
 
-    <div class="mb-6">
-      <label class="block text-gray-700 mb-2" for="CONTRASEÑA">Contraseña</label>
-      <input type="password" name="CONTRASEÑA" id="CONTRASEÑA" required
-        class="w-full px-3 py-2 border rounded">
-    </div>
+      <!-- Contraseña -->
+      <div>
+        <label for="CONTRASEÑA" class="block mb-1 text-gray-700 font-medium">Contraseña</label>
+        <input type="password" id="CONTRASEÑA" name="CONTRASEÑA" required
+          class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-100">
+      </div>
 
-    <div class="flex justify-end">
-      <a href="/usuarios" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded mr-2">
-        Cancelar
-      </a>
-      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-        Crear Usuario
-      </button>
-    </div>
-  </form>
+      <!-- Botones -->
+      <div class="flex justify-end space-x-3">
+        <a href="/usuarios" class="px-4 py-2 rounded-lg bg-gray-500 text-white hover:bg-gray-600 transition">
+          Cancelar
+        </a>
+        <button type="submit" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
+          Crear Usuario
+        </button>
+      </div>
+    </form>
+  </div>
 </div>

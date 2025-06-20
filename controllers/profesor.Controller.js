@@ -51,7 +51,7 @@ module.exports = {
   },
 
     crear: async (req, res) => {
-      const { ID_USUARIO, NOMBRES, APELLIDOS, ESPECIALIDAD, TELEFONO } = req.body;
+    const { ID_USUARIO, NOMBRES, APELLIDOS, DNI, ESPECIALIDAD, TELEFONO } = req.body;
     
       try {
         const usuario = await Usuario.findByPk(ID_USUARIO, {
@@ -68,7 +68,7 @@ module.exports = {
           APELLIDOS,
           ESPECIALIDAD,
           TELEFONO,
-          DNI: usuario.DNI,
+          DNI,
           CORREO: usuario.EMAIL,
           ESTATUS: true,
           FECHA_CREACION: new Date(),
@@ -118,7 +118,7 @@ module.exports = {
   },
 
   editar: async (req, res) => {
-    const { NOMBRES, APELLIDOS, ESPECIALIDAD, TELEFONO, CORREO } = req.body;
+  const { NOMBRES, APELLIDOS, DNI, ESPECIALIDAD, TELEFONO, CORREO } = req.body;
 
     try {
       await Profesor.update({

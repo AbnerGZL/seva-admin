@@ -1,38 +1,53 @@
-<%- include('../partials/header') %>
+<%- include('../partials/header', { title: 'Tipos de Usuario' }) %>
+<%- include('../partials/navbar') %>
 
-<div class="container mx-auto py-8">
-  <h1 class="text-2xl font-bold mb-6">Tipos de Usuario</h1>
-  <a href="/tipos/crear" class="bg-green-500 text-white px-4 py-2 rounded mb-4 inline-block">Nuevo Tipo</a>
+<div class="max-w-5xl mx-auto mt-8">
+  <div class="bg-white p-6 rounded-lg shadow">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+        <i class="fas fa-users-cog text-indigo-600"></i> Tipos de Usuario
+      </h1>
+      <a href="/tipos/crear" class="bg-green-600 text-white px-4 py-2 rounded-lg hover:bg-green-700 transition">
+        <i class="fas fa-plus mr-2"></i> Nuevo Tipo
+      </a>
+    </div>
 
-  <table class="table-auto w-full border">
-    <thead>
-      <tr>
-        <th class="border px-4 py-2">ID</th>
-        <th class="border px-4 py-2">Nombre</th>
-        <th class="border px-4 py-2">Status</th>
-        <th class="border px-4 py-2">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% tipos.forEach(tipo => { %>
-        <tr>
-          <td class="border px-4 py-2"><%= tipo.ID_TIPO %></td>
-          <td class="border px-4 py-2"><%= tipo.NOMBRE %></td>
-          <td class="border px-4 py-2">
-            <% if (tipo.ESTATUS) { %>
-              <span class="text-green-600 font-semibold">Activo</span>
-            <% } else { %>
-              <span class="text-red-600 font-semibold">Inactivo</span>
-            <% } %>
-          </td>
-          <td class="border px-4 py-2">
-            <a href="/tipos/editar/<%= tipo.ID_TIPO %>" class="text-blue-600">Editar</a>
-            <form action="/tipos/eliminar/<%= tipo.ID_TIPO %>" method="POST" class="inline">
-              <button type="submit" class="text-red-600 ml-2">Eliminar</button>
-            </form>
-          </td>
-        </tr>
-      <% }) %>
-    </tbody>
-  </table>
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+        <thead class="bg-gray-100 text-gray-700 text-sm">
+          <tr>
+            <th class="px-4 py-2 text-left">ID</th>
+            <th class="px-4 py-2 text-left">Nombre</th>
+            <th class="px-4 py-2 text-left">Estatus</th>
+            <th class="px-4 py-2 text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="text-sm text-gray-700 divide-y divide-gray-200">
+          <% tipos.forEach(tipo => { %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-2"><%= tipo.ID_TIPO %></td>
+              <td class="px-4 py-2"><%= tipo.NOMBRE %></td>
+              <td class="px-4 py-2">
+                <% if (tipo.ESTATUS) { %>
+                  <span class="text-green-600 font-semibold">Activo</span>
+                <% } else { %>
+                  <span class="text-red-600 font-semibold">Inactivo</span>
+                <% } %>
+              </td>
+              <td class="px-4 py-2 text-center space-x-3">
+                <a href="/tipos/editar/<%= tipo.ID_TIPO %>" class="text-indigo-600 hover:text-indigo-800" title="Editar">
+                  <i class="fas fa-edit"></i>
+                </a>
+                <form action="/tipos/eliminar/<%= tipo.ID_TIPO %>" method="POST" class="inline">
+                  <button type="submit" class="text-red-600 hover:text-red-800" title="Eliminar">
+                    <i class="fas fa-trash-alt"></i>
+                  </button>
+                </form>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

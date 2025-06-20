@@ -1,79 +1,101 @@
 <!DOCTYPE html>
 <html lang="es">
-<head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Panel de Administración</title>
-  <link href="https://cdn.jsdelivr.net/npm/tailwindcss@2.2.19/dist/tailwind.min.css" rel="stylesheet">
-</head>
-<body class="bg-gray-100">
-  <div class="container mx-auto px-4 py-8">
-    <h1 class="text-3xl font-bold mb-8">Panel de Administración</h1>
-    
-    <div class="grid grid-cols-1 md:grid-cols-3 gap-6 mb-8">
-      <!-- Estudiantes -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-xl font-semibold mb-2">Estudiantes</h2>
-        <p class="text-4xl font-bold text-blue-600"><%= totalEstudiantes %></p>
-        <a href="/estudiantes" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
-      </div>
-
-      <!-- Cursos -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-xl font-semibold mb-2">Cursos</h2>
-        <p class="text-4xl font-bold text-green-600"><%= totalCursos %></p>
-        <a href="/cursos" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
-      </div>
-
-      <!-- Profesores -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-xl font-semibold mb-2">Profesores</h2>
-        <p class="text-4xl font-bold text-purple-600"><%= totalProfesores %></p>
-        <a href="/profesores" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
-      </div>
-
-      <!-- Usuarios -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-xl font-semibold mb-2">Usuarios</h2>
-        <p class="text-4xl font-bold text-yellow-600"><%= totalUsuarios %></p>
-        <a href="/usuarios" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
-      </div>
-
-      <!-- Tipos de Usuario -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-xl font-semibold mb-2">Tipos de Usuario</h2>
-        <p class="text-4xl font-bold text-pink-600"><%= totalTipos %></p>
-        <a href="/tipos" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
-      </div>
-
-      <!-- Datos Estudiantes -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-xl font-semibold mb-2">Datos Estudiantes</h2>
-        <p class="text-4xl font-bold text-indigo-600"><%= totalDatosEstudiantes %></p>
-        <a href="/datos" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
-      </div>
-
-      <!-- Carreras -->
-      <div class="bg-white rounded-lg shadow p-6">
-        <h2 class="text-xl font-semibold mb-2">Carreras</h2>
-        <p class="text-4xl font-bold text-red-600"><%= totalCarreras %></p>
-        <a href="/carreras" class="text-blue-500 hover:underline mt-4 block">Ver todos</a>
-      </div>
+<%- include('partials/header.ejs', { title: 'Dashboard Moderno' }) %>
+<body class="bg-gray-50 font-sans p-6">
+<%- include('partials/navbar.ejs') %>
+  <div class="max-w-7xl mx-auto">
+    <!-- Header -->
+    <div class="flex justify-between items-center mb-8">
+      <h1 class="text-3xl font-bold text-gray-800">Dashboard</h1>
     </div>
 
-    <!-- Acciones Rápidas -->
-    <div class="bg-white rounded-lg shadow p-6">
-      <h2 class="text-xl font-semibold mb-4">Acciones Rápidas</h2>
-      <div class="flex flex-wrap gap-4">
-        <a href="/usuarios/crear" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">Nuevo Usuario</a>
-        <a href="/estudiantes/crear" class="bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded">Nuevo Estudiante</a>
-        <a href="/cursos/crear" class="bg-purple-500 hover:bg-purple-600 text-white px-4 py-2 rounded">Nuevo Curso</a>
-        <a href="/profesores/crear" class="bg-yellow-500 hover:bg-yellow-600 text-white px-4 py-2 rounded">Nuevo Profesor</a>
-        <a href="/datos/crear" class="bg-indigo-500 hover:bg-indigo-600 text-white px-4 py-2 rounded">Nuevo Dato Estudiante</a>
-        <a href="/tipos/crear" class="bg-pink-500 hover:bg-pink-600 text-white px-4 py-2 rounded">Nuevo Tipo Usuario</a>
-        <a href="/carreras/crear" class="bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded">Nueva Carrera</a>
+    <!-- Contenedor principal en 3 columnas -->
+    <div class="grid grid-cols-1 lg:grid-cols-3 gap-6">
+      
+      <!-- Contenedor izquierdo (2/3 del ancho) -->
+      <div class="lg:col-span-2 space-y-10">
+        <!-- Acciones Rápidas -->
+        <div class="bg-white rounded-lg shadow p-6">
+          <h3 class="text-xl font-semibold mb-4 text-gray-800">Acciones Rápidas</h3>
+          <div class="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-3">
+            <a href="/usuarios/crear" class="px-4 py-3 bg-blue-50 hover:bg-blue-100 rounded-lg text-center transition-colors">
+              <i class="fas fa-user-plus text-blue-600 mb-2"></i>
+              <p class="text-sm font-medium">Nuevo Usuario</p>
+            </a>
+            <a href="/estudiantes/crear" class="px-4 py-3 bg-green-50 hover:bg-green-100 rounded-lg text-center transition-colors">
+              <i class="fas fa-user-graduate text-green-600 mb-2"></i>
+              <p class="text-sm font-medium">Nuevo Estudiante</p>
+            </a>
+            <a href="/cursos/crear" class="px-4 py-3 bg-purple-50 hover:bg-purple-100 rounded-lg text-center transition-colors">
+              <i class="fas fa-book text-purple-600 mb-2"></i>
+              <p class="text-sm font-medium">Nuevo Curso</p>
+            </a>
+            <a href="/profesores/crear" class="px-4 py-3 bg-yellow-50 hover:bg-yellow-100 rounded-lg text-center transition-colors">
+              <i class="fas fa-chalkboard-teacher text-yellow-600 mb-2"></i>
+              <p class="text-sm font-medium">Nuevo Profesor</p>
+            </a>
+            <a href="/carreras/crear" class="px-4 py-3 bg-red-50 hover:bg-red-100 rounded-lg text-center transition-colors">
+              <i class="fas fa-graduation-cap text-red-600 mb-2"></i>
+              <p class="text-sm font-medium">Nueva Carrera</p>
+            </a>
+          </div>
+        </div>
+
+        <!-- Sección: Gestión Académica -->
+        <div>
+          <h2 class="text-xl font-semibold text-gray-700 mb-4">Gestión Académica</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <%- include('partials/tarjeta', { color: 'blue', titulo: 'Estudiantes', total: totalEstudiantes, url: '/estudiantes', icon: 'fa-user-graduate' }) %>
+            <%- include('partials/tarjeta', { color: 'purple', titulo: 'Profesores', total: totalProfesores, url: '/profesores', icon: 'fa-chalkboard-teacher' }) %>
+            <%- include('partials/tarjeta', { color: 'pink', titulo: 'Carreras', total: totalCarreras, url: '/carreras', icon: 'fa-graduation-cap' }) %>
+            <%- include('partials/tarjeta', { color: 'green', titulo: 'Cursos', total: totalCursos, url: '/cursos', icon: 'fa-book' }) %>
+          </div>
+        </div>
+
+        <!-- Sección: Administración -->
+        <div>
+          <h2 class="text-xl font-semibold text-gray-700 mb-4">Administración</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <%- include('partials/tarjeta', { color: 'yellow', titulo: 'Usuarios', total: totalUsuarios, url: '/usuarios', icon: 'fa-user' }) %>
+            <%- include('partials/tarjeta', { color: 'indigo', titulo: 'Tipos Usuario', total: totalTipos, url: '/tipos', icon: 'fa-users-cog' }) %>
+          </div>
+        </div>
+
+        <!-- Sección: Notas y Control -->
+        <div>
+          <h2 class="text-xl font-semibold text-gray-700 mb-4">Notas y Control</h2>
+          <div class="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 gap-6">
+            <%- include('partials/tarjeta', { color: 'gray', titulo: 'Matrículas', total: totalMatriculas, url: '/matriculas', icon: 'fa-clipboard-list' }) %>
+            <%- include('partials/tarjeta', { color: 'red', titulo: 'Notas', total: totalNotas, url: '/notas', icon: 'fa-file-alt' }) %>
+            <%- include('partials/tarjeta', { color: 'emerald', titulo: 'Notas Detalle', total: totalNotaDetalles, url: '/notadetalle', icon: 'fa-file-signature' }) %>
+            <%- include('partials/tarjeta', { color: 'teal', titulo: 'Pagos', total: totalPagos, url: '/pagos', icon: 'fa-dollar-sign' }) %>
+            <%- include('partials/tarjeta', { color: 'orange', titulo: 'Asistencias', total: totalAsistencias, url: '/asistencias', icon: 'fa-calendar-check' }) %>
+          </div>
+        </div>
       </div>
-    </div>
+
+      <!-- Columna derecha: Actividad Reciente -->
+      <div class="space-y-6">
+        <div class="bg-white rounded-lg shadow p-6 h-full">
+          <h3 class="text-xl font-semibold mb-4 text-gray-800">Actividad Reciente</h3>
+          <div class="space-y-3">
+            <div class="activity-item pl-4 py-3 border-l-blue-500">
+              <p class="font-medium">Nuevo estudiante registrado</p>
+              <p class="text-sm text-gray-500">Hace 15 minutos</p>
+            </div>
+            <div class="activity-item pl-4 py-3 border-l-green-500">
+              <p class="font-medium">Curso de Matemáticas actualizado</p>
+              <p class="text-sm text-gray-500">Hace 1 hora</p>
+            </div>
+            <div class="activity-item pl-4 py-3 border-l-purple-500">
+              <p class="font-medium">Nuevo profesor asignado</p>
+              <p class="text-sm text-gray-500">Hace 3 horas</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div> <!-- FIN grid principal -->
   </div>
 </body>
 </html>

@@ -1,0 +1,15 @@
+<div class="dashboard-card bg-white rounded-lg shadow p-6 border-l-<%= color %>-500 flex items-center space-x-4">
+  <!-- Ícono -->
+  <div class="text-<%= color %>-500 text-3xl">
+    <i class="fas <%= icon %>"></i>
+  </div>
+
+  <!-- Contenido de la tarjeta -->
+  <div>
+    <h3 class="text-gray-500 uppercase text-sm font-medium"><%= titulo %></h3>
+    <p class="text-3xl font-bold my-2"><%= total %></p>
+    <a href="<%= url %>" class="text-<%= color %>-600 hover:text-<%= color %>-800 text-sm font-medium flex items-center">
+      Ver detalles <i class="fas fa-arrow-right ml-2"></i>
+    </a>
+  </div>
+</div>

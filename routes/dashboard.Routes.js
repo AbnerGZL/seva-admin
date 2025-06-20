@@ -1,6 +1,18 @@
 const express = require('express');
 const router = express.Router();
-const { Estudiante, Curso, Profesor, Usuario, TipoUsuario, DatosEstudiante, Carrera } = require('../models');
+const {
+  Estudiante,
+  Curso,
+  Profesor,
+  Usuario,
+  TipoUsuario,
+  Carrera,
+  Nota,
+  Matricula,
+  Pago,
+  Asistencia,
+  NotaDetalle
+} = require('../models');
 
 router.get('/', async (req, res) => {
   try {
@@ -10,16 +22,24 @@ router.get('/', async (req, res) => {
       totalProfesores,
       totalUsuarios,
       totalTipos,
-      totalDatosEstudiantes,
-      totalCarreras
+      totalCarreras,
+      totalNotas,
+      totalMatriculas,
+      totalPagos,
+      totalAsistencias,
+      totalNotaDetalles
     ] = await Promise.all([
       Estudiante.count({ where: { ESTATUS: 1 } }),
       Curso.count({ where: { ESTATUS: 1 } }),
       Profesor.count({ where: { ESTATUS: 1 } }),
       Usuario.count({ where: { ESTATUS: 1 } }),
       TipoUsuario.count(),
-      DatosEstudiante.count(),
-      Carrera.count({ where: { ESTATUS: true } })
+      Carrera.count({ where: { ESTATUS: true } }),
+      Nota.count({ where: { ESTATUS: 1 } }),
+      Matricula.count({ where: { ESTATUS: 1 } }),
+      Pago.count({ where: { ESTATUS: 1 } }),
+      Asistencia.count({ where: { ESTATUS: 1 } }),
+      NotaDetalle.count({ where: { ESTATUS: 1 } })
     ]);
 
     res.render('dashboard', {
@@ -28,8 +48,12 @@ router.get('/', async (req, res) => {
       totalProfesores,
       totalUsuarios,
       totalTipos,
-      totalDatosEstudiantes,
-      totalCarreras
+      totalCarreras,
+      totalNotas,
+      totalMatriculas,
+      totalPagos,
+      totalAsistencias,
+      totalNotaDetalles
     });
   } catch (error) {
     console.error(error);

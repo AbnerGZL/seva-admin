@@ -1,26 +1,72 @@
-<%- include('../partials/header') %>
+<%- include('../partials/header', { title: 'Registrar Carrera' }) %>
+<%- include('../partials/navbar') %>
 
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-2xl font-bold mb-6">Registrar Carrera</h1>
+<div class="max-w-3xl mx-auto px-4 py-8">
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+      <i class="fas fa-plus-circle text-blue-600"></i> Registrar Carrera
+    </h1>
 
-  <form action="/carreras/crear" method="POST" class="bg-white p-6 rounded-lg shadow max-w-lg">
     <% if (error) { %>
-      <div class="text-red-500 mb-4"><%= error %></div>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-6">
+        <%= error %>
+      </div>
     <% } %>
 
-    <div class="mb-4"><label>Nombre</label><input name="NOMBRE" required class="w-full border px-3 py-2 rounded" value="<%= formData?.NOMBRE || '' %>"></div>
-    <div class="mb-4"><label>Código</label><input name="CODIGOCA" required class="w-full border px-3 py-2 rounded" value="<%= formData?.CODIGOCA || '' %>"></div>
-    <div class="mb-4"><label>Descripción</label><input name="DESCRIPCION" required class="w-full border px-3 py-2 rounded" value="<%= formData?.DESCRIPCION || '' %>"></div>
-    <div class="mb-4"><label>Duración</label><input name="DURACION" required class="w-full border px-3 py-2 rounded" value="<%= formData?.DURACION || '' %>"></div>
-    <div class="mb-4"><label>Total Créditos</label><input name="TOTAL_CREDITOS" type="number" required class="w-full border px-3 py-2 rounded" value="<%= formData?.TOTAL_CREDITOS || '' %>"></div>
-    <div class="mb-4"><label>Título</label><input name="TITULO" required class="w-full border px-3 py-2 rounded" value="<%= formData?.TITULO || '' %>"></div>
-    <div class="mb-4"><label>Grado</label><input name="GRADO" required class="w-full border px-3 py-2 rounded" value="<%= formData?.GRADO || '' %>"></div>
-    <div class="mb-4"><label>Departamento</label><input name="DEPARTAMENTO" required class="w-full border px-3 py-2 rounded" value="<%= formData?.DEPARTAMENTO || '' %>"></div>
-    <div class="mb-4"><label>Modalidad</label><input name="MODALIDAD" required class="w-full border px-3 py-2 rounded" value="<%= formData?.MODALIDAD || '' %>"></div>
+    <form action="/carreras/crear" method="POST" class="space-y-4">
+      <div>
+        <label class="block text-gray-700 mb-1">Nombre</label>
+        <input name="NOMBRE" required class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500" value="<%= formData?.NOMBRE || '' %>">
+      </div>
 
-    <div class="flex justify-end">
-      <a href="/carreras" class="bg-gray-500 text-white px-4 py-2 rounded mr-2">Cancelar</a>
-      <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded">Registrar</button>
-    </div>
-  </form>
+      <div>
+        <label class="block text-gray-700 mb-1">Código</label>
+        <input name="CODIGOCA" required class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500" value="<%= formData?.CODIGOCA || '' %>">
+      </div>
+
+      <div>
+        <label class="block text-gray-700 mb-1">Descripción</label>
+        <input name="DESCRIPCION" required class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500" value="<%= formData?.DESCRIPCION || '' %>">
+      </div>
+
+      <div>
+        <label class="block text-gray-700 mb-1">Duración</label>
+        <input name="DURACION" required class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500" value="<%= formData?.DURACION || '' %>">
+      </div>
+
+      <div>
+        <label class="block text-gray-700 mb-1">Total Créditos</label>
+        <input name="TOTAL_CREDITOS" type="number" required class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500" value="<%= formData?.TOTAL_CREDITOS || '' %>">
+      </div>
+
+      <div>
+        <label class="block text-gray-700 mb-1">Título</label>
+        <input name="TITULO" required class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500" value="<%= formData?.TITULO || '' %>">
+      </div>
+
+      <div>
+        <label class="block text-gray-700 mb-1">Grado</label>
+        <input name="GRADO" required class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500" value="<%= formData?.GRADO || '' %>">
+      </div>
+
+      <div>
+        <label class="block text-gray-700 mb-1">Departamento</label>
+        <input name="DEPARTAMENTO" required class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500" value="<%= formData?.DEPARTAMENTO || '' %>">
+      </div>
+
+      <div>
+        <label class="block text-gray-700 mb-1">Modalidad</label>
+        <input name="MODALIDAD" required class="w-full px-4 py-2 border rounded focus:ring-2 focus:ring-blue-500" value="<%= formData?.MODALIDAD || '' %>">
+      </div>
+
+      <div class="flex justify-end pt-4">
+        <a href="/carreras" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded mr-2 transition">
+          Cancelar
+        </a>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">
+          Registrar
+        </button>
+      </div>
+    </form>
+  </div>
 </div>

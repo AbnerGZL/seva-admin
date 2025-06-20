@@ -1,0 +1,66 @@
+<%- include('../partials/header', { title: 'Detalles de Notas' }) %>
+<%- include('../partials/navbar') %>
+
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <div class="bg-white p-6 rounded-lg shadow">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+        <i class="fas fa-list-alt text-blue-600"></i> Detalles de Notas
+      </h1>
+      <a href="/notadetalle/crear" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded shadow">
+        <i class="fas fa-plus-circle mr-1"></i> Registrar Detalle
+      </a>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm text-left bg-white border rounded shadow">
+        <thead class="bg-gray-100 text-gray-700 uppercase">
+          <tr>
+            <th class="py-3 px-4 border">ID</th>
+            <th class="py-3 px-4 border">Nota ID</th>
+            <th class="py-3 px-4 border">Práctica</th>
+            <th class="py-3 px-4 border">Teoría</th>
+            <th class="py-3 px-4 border">Fecha</th>
+            <th class="py-3 px-4 border">Estatus</th>
+            <th class="py-3 px-4 border text-center">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% if (notaDetalles.length === 0) { %>
+            <tr>
+              <td colspan="6" class="py-4 px-4 text-center text-gray-500">No hay detalles registrados.</td>
+            </tr>
+          <% } else { %>
+            <% notaDetalles.forEach(det => { %>
+              <tr class="border-b hover:bg-gray-50">
+                <td class="py-2 px-4 border"><%= det.ID_NOTA_DETALLE %></td>
+                <td class="py-2 px-4 border">Nota #<%= det.ID_NOTA %></td>
+                <td class="py-2 px-4 border"><%= det.PRACTICA %></td>
+                <td class="py-2 px-4 border"><%= det.TEORIA %></td>
+                <td class="py-2 px-4 border"><%= det.FECHA %></td>
+                <td class="px-4 py-2">
+                  <% if (det.ESTATUS) { %>
+                    <span class="text-green-600 font-semibold">Activo</span>
+                  <% } else { %>
+                    <span class="text-red-600 font-semibold">Inactivo</span>
+                  <% } %> 
+                </td>
+                <td class="py-2 px-4 border text-center">
+                  <a href="/notadetalle/editar/<%= det.ID_NOTA_DETALLE %>" class="text-blue-600 hover:underline mr-2">
+                    Editar
+                  </a>
+                  <form action="/notadetalle/eliminar/<%= det.ID_NOTA_DETALLE %>" method="POST" class="inline">
+                    <button type="submit" class="text-red-600 hover:underline"
+                      onclick="return confirm('¿Estás seguro de eliminar este detalle?')">
+                      Eliminar
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>

@@ -1,0 +1,67 @@
+<%- include('../partials/header', { title: 'Pagos' }) %>
+<%- include('../partials/navbar') %>
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <div class="bg-white p-6 rounded-lg shadow">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+        <i class="fas fa-money-check-alt text-blue-600"></i> Pagos Registrados
+      </h1>
+      <a href="/pagos/crear" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded transition">
+        <i class="fas fa-plus mr-2"></i>Nuevo Pago
+      </a>
+    </div>
+
+    <% if (pagos.length === 0) { %>
+      <div class="text-gray-600 text-center py-6">No hay pagos registrados.</div>
+    <% } else { %>
+      <div class="overflow-x-auto">
+        <table class="min-w-full table-auto border border-gray-200 rounded-lg">
+          <thead class="bg-gray-100 text-gray-700 text-sm">
+            <tr>
+              <th class="px-4 py-2 text-left">ID</th>
+              <th class="px-4 py-2 text-left">Matrícula</th>
+              <th class="px-4 py-2 text-left">Fecha</th>
+              <th class="px-4 py-2 text-left">Monto</th>
+              <th class="px-4 py-2 text-left">Formato</th>
+              <th class="px-4 py-2 text-left">Recibo</th>
+              <th class="px-4 py-2 text-left">Observación</th>
+              <th class="px-4 py-2 text-left">Estatus</th>
+              <th class="px-4 py-2 text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm divide-y divide-gray-200">
+            <% pagos.forEach(pago => { %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-2"><%= pago.ID_PAGO %></td>
+                <td class="px-4 py-2"><%= pago.ID_MATRICULA %></td>
+                <td class="px-4 py-2"><%= pago.FECHA_PAGO %></td>
+                <td class="px-4 py-2">S/ <%= Number(pago.MONTO).toFixed(2) %></td>
+                <td class="px-4 py-2"><%= pago.FORMATO %></td>
+                <td class="px-4 py-2"><%= pago.RECIBO %></td>
+                <td class="px-4 py-2"><%= pago.OBSERVACION %></td>
+                <td class="px-4 py-2">
+                  <% if (pago.ESTATUS) { %>
+                    <span class="text-green-600 font-semibold">Activo</span>
+                  <% } else { %>
+                    <span class="text-red-600 font-semibold">Inactivo</span>
+                  <% } %>
+                </td>
+                <td class="px-4 py-2 text-center space-x-2">
+                  <a href="/pagos/editar/<%= pago.ID_PAGO %>" class="text-indigo-600 hover:text-indigo-800" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                  <form action="/pagos/eliminar/<%= pago.ID_PAGO %>" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este pago?');" class="inline">
+                    <button type="submit" class="text-red-600 hover:text-red-800" title="Eliminar">
+                      <i class="fas fa-trash-alt"></i>
+                    </button>
+                  </form>
+                </td>
+              </tr>
+            <% }) %>
+          </tbody>
+        </table>
+      </div>
+    <% } %>
+  </div>
+</div>

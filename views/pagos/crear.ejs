@@ -1,0 +1,94 @@
+<%- include('../partials/header', { title: 'Registrar Pago' }) %>
+<%- include('../partials/navbar') %>
+
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+      <i class="fas fa-money-bill-wave text-blue-600"></i> Registrar Nuevo Pago
+    </h1>
+
+    <form action="/pagos/crear" method="POST" class="space-y-4">
+      <% if (error) { %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <%= error %>
+        </div>
+      <% } %>
+
+      <!-- Matrícula -->
+      <div>
+        <label for="ID_MATRICULA" class="block text-gray-700 mb-1">Matrícula</label>
+        <select name="ID_MATRICULA" id="ID_MATRICULA" required class="w-full px-3 py-2 border rounded">
+          <% matriculas.forEach(mat => { %>
+            <option value="<%= mat.ID_MATRICULA %>" <%= formData?.ID_MATRICULA == mat.ID_MATRICULA ? 'selected' : '' %>>
+              Matrícula #<%= mat.ID_MATRICULA %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <!-- Fecha de Pago -->
+      <div>
+        <label for="FECHA_PAGO" class="block text-gray-700 mb-1">Fecha de Pago</label>
+        <input type="date" name="FECHA_PAGO" id="FECHA_PAGO" required
+          value="<%= formData?.FECHA_PAGO || '' %>"
+          class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+      <!-- Monto -->
+      <div>
+        <label for="MONTO" class="block text-gray-700 mb-1">Monto</label>
+        <input type="number" step="0.01" name="MONTO" id="MONTO" required
+          value="<%= formData?.MONTO || '' %>"
+          class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+      <!-- Formato -->
+      <div>
+        <label for="FORMATO" class="block text-gray-700 mb-1">Formato</label>
+        <input type="text" name="FORMATO" id="FORMATO" required
+          value="<%= formData?.FORMATO || '' %>"
+          class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+      <!-- Recibo (generado automáticamente) -->
+      <div>
+        <label for="RECIBO" class="block text-gray-700 mb-1">Recibo</label>
+        <input type="text" name="RECIBO" id="RECIBO" readonly
+          value="<%= formData?.RECIBO || '' %>"
+          class="w-full px-3 py-2 border rounded bg-gray-100 text-gray-600">
+      </div>
+
+      <!-- Observación -->
+      <div>
+        <label for="OBSERVACION" class="block text-gray-700 mb-1">Observación</label>
+        <textarea name="OBSERVACION" id="OBSERVACION" required
+          class="w-full px-3 py-2 border border-gray-300 rounded h-24 resize-none"><%= formData?.OBSERVACION || '' %></textarea>
+      </div>
+
+      <!-- Botones -->
+      <div class="flex justify-end space-x-2 pt-4">
+        <a href="/pagos" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+          Cancelar
+        </a>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+          Registrar Pago
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
+
+<script>
+  function generarCodigoRecibo() {
+    const prefijo = "REC-";
+    const random = Math.floor(100000 + Math.random() * 900000);
+    return prefijo + random;
+  }
+
+  window.addEventListener('DOMContentLoaded', () => {
+    const reciboInput = document.getElementById('RECIBO');
+    if (!reciboInput.value) {
+      reciboInput.value = generarCodigoRecibo();
+    }
+  });
+</script>

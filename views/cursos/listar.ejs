@@ -1,37 +1,64 @@
-<%- include('../partials/header') %>
+<%- include('../partials/header', { title: 'Listado de Cursos' }) %>
+<%- include('../partials/navbar') %>
 
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-2xl font-bold mb-6">Listado de Cursos</h1>
+<div class="max-w-6xl mx-auto px-4 py-8">
+  <div class="bg-white p-6 rounded-lg shadow">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+        <i class="fas fa-book text-green-600"></i> Listado de Cursos
+      </h1>
+      <a href="/cursos/crear" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded">
+        <i class="fas fa-plus mr-1"></i> Nuevo Curso
+      </a>
+    </div>
 
-  <a href="/cursos/crear" class="bg-green-600 text-white px-4 py-2 rounded mb-4 inline-block">Nuevo Curso</a>
-
-  <table class="min-w-full table-auto border">
-    <thead>
-      <tr class="bg-gray-200">
-        <th class="px-4 py-2">Código</th>
-        <th class="px-4 py-2">Nombre</th>
-        <th class="px-4 py-2">Profesor</th>
-        <th class="px-4 py-2">Créditos</th>
-        <th class="px-4 py-2">Duración</th>
-        <th class="px-4 py-2">Horas</th>
-        <th class="px-4 py-2">Acciones</th>
-      </tr>
-    </thead>
-    <tbody>
-      <% cursos.forEach(curso => { %>
-        <tr class="border-t">
-          <td class="px-4 py-2"><%= curso.CODIGOCU %></td>
-          <td class="px-4 py-2"><%= curso.NOMBRE %></td>
-          <td class="px-4 py-2"><%= curso.profesor?.NOMBRES %> <%= curso.profesor?.APELLIDOS %></td>
-          <td class="px-4 py-2"><%= curso.CREDITOS %></td>
-          <td class="px-4 py-2"><%= curso.DURACION %></td>
-          <td class="px-4 py-2"><%= curso.HORAS %></td>
-          <td class="px-4 py-2">
-            <a href="/cursos/editar/<%= curso.ID_CURSO %>" class="text-blue-600 hover:underline mr-2">Editar</a>
-            <a href="/cursos/eliminar/<%= curso.ID_CURSO %>" class="text-red-600 hover:underline">Eliminar</a>
-          </td>
-        </tr>
-      <% }) %>
-    </tbody>
-  </table>
+    <div class="overflow-x-auto">
+      <table class="min-w-full text-sm text-left border bg-white rounded-lg shadow">
+        <thead class="bg-gray-100 text-gray-700 font-semibold">
+          <tr>
+            <th class="px-4 py-2 border">ID</th>
+            <th class="px-4 py-2 border">Código</th>
+            <th class="px-4 py-2 border">Nombre</th>
+            <th class="px-4 py-2 border">Profesor</th>
+            <th class="px-4 py-2 border">Créditos</th>
+            <th class="px-4 py-2 border">Duración</th>
+            <th class="px-4 py-2 border">Horas</th>
+            <th class="px-4 py-2 border">Estatus</th>
+            <th class="px-4 py-2 border">Acciones</th>
+          </tr>
+        </thead>
+        <tbody>
+          <% cursos.forEach(curso => { %>
+            <tr class="hover:bg-gray-50">
+              <td class="px-4 py-2 border"><%= curso.ID_CURSO %></td>
+              <td class="px-4 py-2 border"><%= curso.CODIGOCU %></td>
+              <td class="px-4 py-2 border"><%= curso.NOMBRE %></td>
+              <td class="px-4 py-2 border"><%= curso.profesor?.NOMBRES %> <%= curso.profesor?.APELLIDOS %></td>
+              <td class="px-4 py-2 border"><%= curso.CREDITOS %></td>
+              <td class="px-4 py-2 border"><%= curso.DURACION %></td>
+              <td class="px-4 py-2 border"><%= curso.HORAS %></td>
+              <td class="py-2 px-4 border">
+                <span class="inline-block px-2 py-1 text-xs font-medium rounded 
+                  <%= curso.ESTATUS ? 'bg-green-100 text-green-700' : 'bg-red-100 text-red-700' %>">
+                  <%= curso.ESTATUS ? 'Activo' : 'Inactivo' %>
+                </span>
+              </td>
+              <td class="px-4 py-2 border">
+                <div class="flex items-center gap-2">
+                  <a href="/cursos/editar/<%= curso.ID_CURSO %>" class="text-blue-600 hover:underline">
+                    <i class="fas fa-edit"></i> Editar
+                  </a>
+                  <form action="/cursos/eliminar/<%= curso.ID_CURSO %>" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este curso?');">
+                    <button type="submit" class="text-red-600 hover:underline">
+                      <i class="fas fa-trash-alt"></i> Eliminar
+                    </button>
+                  </form>
+                </div>
+              </td>
+            </tr>
+          <% }) %>
+        </tbody>
+      </table>
+    </div>
+  </div>
 </div>

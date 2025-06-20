@@ -1,91 +1,101 @@
-<%- include('../partials/header') %>
+<%- include('../partials/header', { title: 'Registrar Estudiante' }) %>
+<%- include('../partials/navbar') %>
 
-<div class="container mx-auto px-4 py-8">
-  <h1 class="text-2xl font-bold mb-6">Registrar Nuevo Estudiante</h1>
+<div class="max-w-4xl mx-auto px-4 py-8">
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h1 class="text-2xl font-bold text-gray-800 mb-6 flex items-center gap-2">
+      <i class="fas fa-user-plus text-blue-600"></i> Registrar Nuevo Estudiante
+    </h1>
 
-  <form action="/estudiantes/crear" method="POST" class="max-w-md bg-white p-6 rounded-lg shadow">
-    <% if (typeof error !== 'undefined' && error) { %>
-      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">
-        <%= error %>
+    <form action="/estudiantes/crear" method="POST" class="space-y-4">
+      <% if (typeof error !== 'undefined' && error) { %>
+        <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded">
+          <%= error %>
+        </div>
+      <% } %>
+
+      <!-- Usuario selector -->
+      <div>
+        <label for="ID_USUARIO" class="block text-gray-700 mb-1">Usuario</label>
+        <select name="ID_USUARIO" id="ID_USUARIO" required class="w-full px-3 py-2 border rounded" onchange="actualizarCorreo()">
+          <% if (usuarios.length === 0) { %>
+            <option disabled selected>No hay usuarios disponibles</option>
+          <% } else { %>
+            <% usuarios.forEach(usuario => { %>
+              <option value="<%= usuario.ID_USUARIO %>" data-email="<%= usuario.EMAIL %>" 
+                <%= (formData && formData.ID_USUARIO == usuario.ID_USUARIO) ? 'selected' : '' %>>
+                <%= usuario.EMAIL %> - <%= usuario.tipo ? usuario.tipo.NOMBRE : 'Sin tipo' %>
+              </option>
+            <% }); %>
+          <% } %>
+        </select>
       </div>
-    <% } %>
 
-    <!-- Usuario selector -->
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2" for="ID_USUARIO">Usuario</label>
-      <select name="ID_USUARIO" id="ID_USUARIO" required class="w-full px-3 py-2 border rounded"
-        onchange="actualizarCorreo()">
-        <% if (usuarios.length === 0) { %>
-          <option disabled selected>No hay usuarios disponibles</option>
-        <% } else { %>
-          <% usuarios.forEach(usuario => { %>
-            <option value="<%= usuario.ID_USUARIO %>" data-email="<%= usuario.EMAIL %>"
-              <%= (formData && formData.ID_USUARIO == usuario.ID_USUARIO) ? 'selected' : '' %>>
-              <%= usuario.EMAIL %> - <%= usuario.tipo ? usuario.tipo.NOMBRE : 'Sin tipo' %>
+      <!-- Nombres -->
+      <div>
+        <label for="NOMBRES" class="block text-gray-700 mb-1">Nombres</label>
+        <input type="text" name="NOMBRES" id="NOMBRES" required
+          value="<%= formData ? formData.NOMBRES : '' %>"
+          class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+      <!-- Apellidos -->
+      <div>
+        <label for="APELLIDOS" class="block text-gray-700 mb-1">Apellidos</label>
+        <input type="text" name="APELLIDOS" id="APELLIDOS" required
+          value="<%= formData ? formData.APELLIDOS : '' %>"
+          class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+      <!-- DNI -->
+      <div>
+        <label for="DNI" class="block text-gray-700 mb-1">DNI</label>
+        <input type="text" name="DNI" id="DNI" required
+          value="<%= formData ? formData.DNI : '' %>"
+          class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
+
+      <!-- Carrera -->
+      <div>
+        <label for="CARRERA" class="block text-gray-700 mb-1">Carrera</label>
+        <select name="CARRERA" id="CARRERA" required class="w-full px-3 py-2 border rounded">
+          <option value="" disabled <%= !(formData && formData.CARRERA) ? 'selected' : '' %>>Seleccione una carrera</option>
+          <% carreras.forEach(carrera => { %>
+            <option value="<%= carrera.NOMBRE %>" 
+              <%= (formData && formData.CARRERA === carrera.NOMBRE) ? 'selected' : '' %>>
+              <%= carrera.NOMBRE %>
             </option>
-          <% }); %>
-        <% } %>
-      </select>
-    </div>
+          <% }) %>
+        </select>
+      </div>
 
-    <!-- Nombres -->
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2" for="NOMBRES">Nombres</label>
-      <input type="text" name="NOMBRES" id="NOMBRES" required
-        value="<%= formData ? formData.NOMBRES : '' %>"
-        class="w-full px-3 py-2 border rounded">
-    </div>
+      <!-- Correo (solo lectura) -->
+      <div>
+        <label for="CORREO" class="block text-gray-700 mb-1">Correo</label>
+        <input type="email" name="CORREO" id="CORREO" readonly
+          value="<%= formData ? formData.CORREO : '' %>"
+          class="w-full px-3 py-2 border rounded bg-gray-100 text-gray-600">
+      </div>
 
-    <!-- Apellidos -->
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2" for="APELLIDOS">Apellidos</label>
-      <input type="text" name="APELLIDOS" id="APELLIDOS" required
-        value="<%= formData ? formData.APELLIDOS : '' %>"
-        class="w-full px-3 py-2 border rounded">
-    </div>
+      <!-- Estado -->
+      <div>
+        <label for="ESTADO" class="block text-gray-700 mb-1">Estado</label>
+        <input type="text" name="ESTADO" id="ESTADO" required
+          value="<%= formData ? formData.ESTADO : '' %>"
+          class="w-full px-3 py-2 border border-gray-300 rounded">
+      </div>
 
-    <!-- DNI -->
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2" for="DNI">DNI</label>
-      <input type="text" name="DNI" id="DNI" required
-        value="<%= formData ? formData.DNI : '' %>"
-        class="w-full px-3 py-2 border rounded">
-    </div>
-
-    <!-- Carrera -->
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2" for="CARRERA">Carrera</label>
-      <input type="text" name="CARRERA" id="CARRERA" required
-        value="<%= formData ? formData.CARRERA : '' %>"
-        class="w-full px-3 py-2 border rounded">
-    </div>
-
-    <!-- Correo (autocompletado y solo lectura) -->
-    <div class="mb-4">
-      <label class="block text-gray-700 mb-2" for="CORREO">Correo</label>
-      <input type="email" name="CORREO" id="CORREO" readonly
-        value="<%= formData ? formData.CORREO : '' %>"
-        class="w-full px-3 py-2 border rounded bg-gray-100 text-gray-600">
-    </div>
-
-    <!-- Estado -->
-    <div class="mb-6">
-      <label class="block text-gray-700 mb-2" for="ESTADO">Estado</label>
-      <input type="text" name="ESTADO" id="ESTADO" required
-        value="<%= formData ? formData.ESTADO : '' %>"
-        class="w-full px-3 py-2 border rounded">
-    </div>
-
-    <!-- Botones -->
-    <div class="flex justify-end">
-      <a href="/estudiantes" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded mr-2">
-        Cancelar
-      </a>
-      <button type="submit" class="bg-blue-500 hover:bg-blue-600 text-white px-4 py-2 rounded">
-        Crear Estudiante
-      </button>
-    </div>
-  </form>
+      <!-- Botones -->
+      <div class="flex justify-end space-x-2 pt-4">
+        <a href="/estudiantes" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+          Cancelar
+        </a>
+        <button type="submit" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">
+          Crear Estudiante
+        </button>
+      </div>
+    </form>
+  </div>
 </div>
 
 <script>

@@ -6,7 +6,6 @@ const Estudiante = require('./Estudiante');
 const Profesor = require('./Profesor');
 const Curso = require('./Curso');
 const Nota = require('./Nota');
-const DatosEstudiante = require('./DatosEstudiante');
 const Carrera = require('./Carrera');
 const Matricula = require('./Matricula');
 const Pago = require('./Pago');
@@ -31,11 +30,6 @@ Usuario.hasOne(Profesor, {
 Estudiante.belongsTo(Usuario, {
   foreignKey: 'ID_USUARIO',
   as: 'usuario',
-});
-
-Estudiante.hasOne(DatosEstudiante, {
-  foreignKey: 'ID_ESTUDIANTE',
-  as: 'datos',
 });
 
 Estudiante.hasMany(Matricula, {
@@ -133,11 +127,6 @@ Asistencia.belongsTo(Curso, {
   as: 'curso',
 });
 
-DatosEstudiante.belongsTo(Estudiante, {
-  foreignKey: 'ID_ESTUDIANTE',
-  as: 'estudiante',
-});
-
 Pago.belongsTo(Matricula, {
   foreignKey: 'ID_MATRICULA',
   as: 'matricula',
@@ -151,7 +140,6 @@ module.exports = {
   Profesor,
   Curso,
   Nota,
-  DatosEstudiante,
   Carrera,
   Matricula,
   Pago,

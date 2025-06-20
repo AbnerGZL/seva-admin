@@ -1,41 +1,66 @@
-<%- include('../partials/header') %>
-<h1>Usuarios</h1>
-<a href="/usuarios/crear">Nuevo Usuario</a>
+<!DOCTYPE html>
+<html lang="es">
+<%- include('../partials/header.ejs', { title: 'Dashboard Moderno' }) %>
+<body class="bg-gray-50 font-sans">
+  <%- include('../partials/navbar') %>
 
-<table>
-  <thead>
-    <tr>
-      <th>ID</th>
-      <th>Email</th>
-      <th>Tipo</th>
-      <th>Status</th>
-      <th>Acciones</th>
-    </tr>
-  </thead>
-  <tbody>
-    <% if (usuarios && usuarios.length > 0) { %>
-      <% usuarios.forEach(usuario => { %>
-        <tr>
-          <td><%= usuario.ID_USUARIO %></td>
-          <td><%= usuario.EMAIL %></td>
-          <td><%= usuario.tipo ? usuario.tipo.NOMBRE : 'Sin tipo' %></td>
-          <td>
-            <% if (usuario.ESTATUS) { %>
-              <span class="text-green-600 font-semibold">Activo</span>
+  <div class="max-w-7xl mx-auto p-6">
+    <div class="bg-white p-6 rounded-lg shadow mb-6">
+      <div class="flex justify-between items-center mb-4">
+        <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+          <i class="fas fa-user text-blue-600"></i> Usuarios
+        </h1>
+        <a href="/usuarios/crear" class="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition">
+          <i class="fas fa-plus mr-2"></i>Nuevo Usuario
+        </a>
+      </div>
+
+      <div class="overflow-x-auto">
+        <table class="min-w-full bg-white border border-gray-200 rounded-lg">
+          <thead class="bg-gray-100 text-gray-700 text-sm">
+            <tr>
+              <th class="px-4 py-2 text-left">ID</th>
+              <th class="px-4 py-2 text-left">Codigo</th>
+              <th class="px-4 py-2 text-left">Email</th>
+              <th class="px-4 py-2 text-left">Tipo</th>
+              <th class="px-4 py-2 text-left">Estatus</th>
+              <th class="px-4 py-2 text-center">Acciones</th>
+            </tr>
+          </thead>
+          <tbody class="text-sm text-gray-700 divide-y divide-gray-200">
+            <% if (usuarios && usuarios.length > 0) { %>
+              <% usuarios.forEach(usuario => { %>
+                <tr class="hover:bg-gray-50">
+                  <td class="px-4 py-2"><%= usuario.ID_USUARIO %></td>
+                  <td class="px-4 py-2"><%= usuario.CODIGOU %></td>
+                  <td class="px-4 py-2"><%= usuario.EMAIL %></td>
+                  <td class="px-4 py-2"><%= usuario.tipo ? usuario.tipo.NOMBRE : 'Sin tipo' %></td>
+                  <td class="px-4 py-2">
+                    <% if (usuario.ESTATUS) { %>
+                      <span class="text-green-600 font-semibold">Activo</span>
+                    <% } else { %>
+                      <span class="text-red-600 font-semibold">Inactivo</span>
+                    <% } %>
+                  </td>
+                  <td class="px-4 py-2 text-center space-x-2">
+                    <a href="/usuarios/editar/<%= usuario.ID_USUARIO %>" class="text-indigo-600 hover:text-indigo-800" title="Editar">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <a href="/usuarios/eliminar/<%= usuario.ID_USUARIO %>" class="text-red-600 hover:text-red-800" title="Eliminar">
+                      <i class="fas fa-trash-alt"></i>
+                    </a>
+                  </td>
+                </tr>
+              <% }) %>
             <% } else { %>
-              <span class="text-red-600 font-semibold">Inactivo</span>
+              <tr>
+                <td colspan="5" class="text-center text-gray-500 py-4">No hay usuarios registrados.</td>
+              </tr>
             <% } %>
-          </td>
-          <td>
-            <a href="/usuarios/editar/<%= usuario.ID_USUARIO %>">✏️</a>
-            <a href="/usuarios/eliminar/<%= usuario.ID_USUARIO %>">🗑️</a>
-          </td>
-        </tr>
-      <% }); %>
-    <% } else { %>
-      <tr>
-        <td colspan="4">No hay usuarios registrados</td>
-      </tr>
-    <% } %>
-  </tbody>
-</table>
+          </tbody>
+        </table>
+      </div>
+    </div>
+  </div>
+</body>
+</html>
