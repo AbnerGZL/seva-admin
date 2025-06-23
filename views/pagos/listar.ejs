@@ -34,7 +34,14 @@
             <% pagos.forEach(pago => { %>
               <tr class="hover:bg-gray-50">
                 <td class="px-4 py-2"><%= pago.ID_PAGO %></td>
-                <td class="px-4 py-2"><%= pago.ID_MATRICULA %></td>
+                <td class="px-4 py-2">
+                  <div class="font-medium text-gray-800">
+                    <%= pago.matricula?.estudiante?.NOMBRES %> <%= pago.matricula?.estudiante?.APELLIDOS %>
+                  </div>
+                  <div class="text-gray-500 text-sm">
+                    <span>Carrera: <%= pago.matricula?.carrera?.NOMBRE %></span><br>
+                  </div>
+                </td>
                 <td class="px-4 py-2"><%= pago.FECHA_PAGO %></td>
                 <td class="px-4 py-2">S/ <%= Number(pago.MONTO).toFixed(2) %></td>
                 <td class="px-4 py-2"><%= pago.FORMATO %></td>
@@ -48,9 +55,20 @@
                   <% } %>
                 </td>
                 <td class="px-4 py-2 text-center space-x-2">
-                  <a href="/pagos/editar/<%= pago.ID_PAGO %>" class="text-indigo-600 hover:text-indigo-800" title="Editar">
-                    <i class="fas fa-edit"></i>
-                  </a>
+                  <% if (pago.ESTATUS) { %>
+                    <a href="/pagos/editar/<%= pago.ID_PAGO %>" class="text-indigo-600 hover:text-indigo-800" title="Editar">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                  <% } else { %>
+                    <button 
+                      class="text-yellow-600 hover:text-yellow-800" 
+                      title="Reactivar y Editar"
+                      onclick="confirmarReactivacion(<%= pago.ID_PAGO %>)"
+                    >
+                      <i class="fas fa-exclamation-circle"></i> Editar
+                    </button>
+                  <% } %>
+
                   <form action="/pagos/eliminar/<%= pago.ID_PAGO %>" method="POST" onsubmit="return confirm('¿Estás seguro de eliminar este pago?');" class="inline">
                     <button type="submit" class="text-red-600 hover:text-red-800" title="Eliminar">
                       <i class="fas fa-trash-alt"></i>
@@ -65,3 +83,40 @@
     <% } %>
   </div>
 </div>
+
+<!-- Modal -->
+<div id="modalReactivar" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
+    <h2 class="text-lg font-semibold mb-4">¿Reactivar pago inactivo?</h2>
+    <p class="text-gray-600 mb-6">Este pago está inactivo. ¿Deseas reactivarlo y editarlo?</p>
+    <div class="flex justify-end space-x-2">
+      <button onclick="cerrarModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">Cancelar</button>
+      <button id="btnConfirmar" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Sí, Reactivar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  function confirmarReactivacion(id) {
+    const modal = document.getElementById('modalReactivar');
+    const btn = document.getElementById('btnConfirmar');
+    btn.onclick = async () => {
+      try {
+        const res = await fetch(`/pagos/reactivar/${id}`, { method: 'POST' });
+        const data = await res.json();
+        if (data.ok) {
+          window.location.href = `/pagos/editar/${id}`;
+        } else {
+          alert("Error al reactivar");
+        }
+      } catch (err) {
+        alert("Error en la solicitud");
+      }
+    };
+    modal.classList.remove('hidden');
+  }
+
+  function cerrarModal() {
+    document.getElementById('modalReactivar').classList.add('hidden');
+  }
+</script>

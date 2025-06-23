@@ -90,6 +90,23 @@ module.exports = {
     }
   },
 
+  reactivar: async (req, res) => {
+    try {
+      await Matricula.update(
+        {
+          ESTATUS: true,
+          FECHA_MODIFICACION: new Date()
+        },
+        { where: { ID_MATRICULA: req.params.id } }
+      );
+      res.json({ ok: true });
+    } catch (error) {
+      console.error(error);
+      res.json({ ok: false });
+    }
+  },
+
+
   eliminar: async (req, res) => {
     try {
       await Matricula.update(

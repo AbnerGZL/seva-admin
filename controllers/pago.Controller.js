@@ -1,4 +1,4 @@
-const { Pago, Matricula } = require('../models');
+const { Pago, Matricula, Estudiante, Carrera } = require('../models');
 
 const generarCodigoReciboUnico = async () => {
   let codigo;
@@ -17,7 +17,17 @@ const generarCodigoReciboUnico = async () => {
 module.exports = {
   listar: async (req, res) => {
     try {
-      const pagos = await Pago.findAll({ include: [{ model: Matricula, as: 'matricula' }] });
+      const pagos = await Pago.findAll({
+        include: [{
+          model: Matricula,
+          as: 'matricula',
+          include: [
+            { model: Estudiante, as: 'estudiante' },
+            { model: Carrera, as: 'carrera' }
+          ]
+        }]
+      });
+
       res.render('pagos/listar', { pagos });
     } catch (error) {
       console.error(error);
@@ -27,7 +37,21 @@ module.exports = {
 
   crearForm: async (req, res) => {
     try {
-      const matriculas = await Matricula.findAll({ where: { ESTATUS: true } });
+      const matriculas = await Matricula.findAll({
+        where: { ESTATUS: true },
+        include: [
+          {
+            model: Estudiante,
+            as: 'estudiante',
+            where: { ESTATUS: true }
+          },
+          {
+            model: Carrera,
+            as: 'carrera'
+          }
+        ]
+      });
+
       res.render('pagos/crear', { matriculas, formData: null, error: null });
     } catch (error) {
       console.error(error);
@@ -54,15 +78,58 @@ module.exports = {
       res.redirect('/pagos');
     } catch (error) {
       console.error(error);
-      const matriculas = await Matricula.findAll({ where: { ESTATUS: true } });
-      res.render('pagos/crear', { matriculas, formData: req.body, error: 'Error al crear pago' });
+
+      const matriculas = await Matricula.findAll({
+        where: { ESTATUS: true },
+        include: [
+          {
+            model: Estudiante,
+            as: 'estudiante',
+            where: { ESTATUS: true }
+          },
+          {
+            model: Carrera,
+            as: 'carrera'
+          }
+        ]
+      });
+
+      res.render('pagos/crear', {
+        matriculas,
+        formData: req.body,
+        error: 'Error al crear pago'
+      });
     }
   },
 
   editarForm: async (req, res) => {
     try {
-      const pago = await Pago.findByPk(req.params.id);
-      const matriculas = await Matricula.findAll({ where: { ESTATUS: true } });
+      const pago = await Pago.findByPk(req.params.id, {
+        include: {
+          model: Matricula,
+          as: 'matricula',
+          include: [
+            { model: Estudiante, as: 'estudiante' },
+            { model: Carrera, as: 'carrera' }
+          ]
+        }
+      });
+
+      const matriculas = await Matricula.findAll({
+        where: { ESTATUS: true },
+        include: [
+          {
+            model: Estudiante,
+            as: 'estudiante',
+            where: { ESTATUS: true }
+          },
+          {
+            model: Carrera,
+            as: 'carrera'
+          }
+        ]
+      });
+
       res.render('pagos/editar', { pago, matriculas, error: null });
     } catch (error) {
       console.error(error);
@@ -82,18 +149,60 @@ module.exports = {
       }, {
         where: { ID_PAGO: req.params.id }
       });
+
       res.redirect('/pagos');
     } catch (error) {
       console.error(error);
+
       const pago = await Pago.findByPk(req.params.id);
-      const matriculas = await Matricula.findAll({ where: { ESTATUS: true } });
-      res.render('pagos/editar', { pago, matriculas, error: 'Error al actualizar pago' });
+      const matriculas = await Matricula.findAll({
+        where: { ESTATUS: true },
+        include: [
+          {
+            model: Estudiante,
+            as: 'estudiante',
+            where: { ESTATUS: true }
+          },
+          {
+            model: Carrera,
+            as: 'carrera'
+          }
+        ]
+      });
+
+      res.render('pagos/editar', {
+        pago,
+        matriculas,
+        error: 'Error al actualizar pago'
+      });
+    }
+  },
+
+  reactivar: async (req, res) => {
+    try {
+      await Pago.update({
+        ESTATUS: true,
+        FECHA_MODIFICACION: new Date()
+      }, {
+        where: { ID_PAGO: req.params.id }
+      });
+
+      res.json({ ok: true });
+    } catch (error) {
+      console.error(error);
+      res.json({ ok: false });
     }
   },
 
   eliminar: async (req, res) => {
     try {
-      await Pago.update({ ESTATUS: false, FECHA_MODIFICACION: new Date() }, { where: { ID_PAGO: req.params.id } });
+      await Pago.update({
+        ESTATUS: false,
+        FECHA_MODIFICACION: new Date()
+      }, {
+        where: { ID_PAGO: req.params.id }
+      });
+
       res.redirect('/pagos');
     } catch (error) {
       console.error(error);

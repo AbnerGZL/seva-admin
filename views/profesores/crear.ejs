@@ -13,7 +13,18 @@
       </div>
     <% } %>
 
-    <form action="/profesores/crear" method="POST" class="space-y-4">
+    <% if (usuarios.length === 0) { %>
+      <div class="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded mb-6">
+        No hay usuarios disponibles con tipo "Profesor" activo. Crea uno antes de continuar.
+        <div class="mt-2">
+          <a href="/usuarios/crear" class="bg-green-600 hover:bg-green-700 text-white px-4 py-2 rounded transition">
+            Crear nuevo Usuario
+          </a>
+        </div>
+      </div>
+    <% } %>
+
+    <form action="/profesores/crear" method="POST" class="space-y-4" <%= usuarios.length === 0 ? 'style="pointer-events: none; opacity: 0.5;"' : '' %>>
       <!-- Usuario -->
       <div>
         <label for="ID_USUARIO" class="block text-gray-700 font-medium mb-1">Usuario</label>
@@ -83,7 +94,7 @@
   function actualizarCorreo() {
     const select = document.getElementById('ID_USUARIO');
     const selectedOption = select.options[select.selectedIndex];
-    const email = selectedOption.getAttribute('data-email');
+    const email = selectedOption?.getAttribute('data-email') || '';
     document.getElementById('CORREO').value = email;
     document.getElementById('correoVisible').value = email;
   }

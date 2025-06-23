@@ -191,5 +191,19 @@ module.exports = {
       console.error(error);
       res.render('error', { mensaje: 'Error al eliminar estudiante' });
     }
+  },
+
+  reactivar: async (req, res) => {
+    try {
+      await Estudiante.update(
+        { ESTATUS: true, FECHA_MODIFICACION: new Date() },
+        { where: { ID_ESTUDIANTE: req.params.id } }
+      );
+      res.json({ ok: true });
+    } catch (error) {
+      console.error(error);
+      res.json({ ok: false });
+    }
   }
+
 };

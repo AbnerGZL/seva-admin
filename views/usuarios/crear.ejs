@@ -18,11 +18,22 @@
       </div>
     <% } %>
 
+    <% if (tipos.length === 0) { %>
+      <div class="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded mb-6">
+        No hay tipos de usuario disponibles. Por favor, crea uno antes de continuar.
+        <div class="mt-3">
+          <a href="/tipos/crear" class="inline-block px-4 py-2 bg-yellow-500 text-white rounded hover:bg-yellow-600 transition">
+            Crear Tipo de Usuario
+          </a>
+        </div>
+      </div>
+    <% } %>
+
     <form action="/usuarios/crear" method="POST" class="space-y-5">
       <!-- Tipo de Usuario -->
       <div>
         <label for="ID_TIPO" class="block mb-1 text-gray-700 font-medium">Tipo de Usuario</label>
-        <select id="ID_TIPO" name="ID_TIPO" required class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-100">
+        <select id="ID_TIPO" name="ID_TIPO" required class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-100" <%= tipos.length === 0 ? 'disabled' : '' %>>
           <% tipos.forEach(tipo => { %>
             <option value="<%= tipo.ID_TIPO %>" 
               <%= (formData && formData.ID_TIPO == tipo.ID_TIPO) ? 'selected' : '' %>>
@@ -60,7 +71,7 @@
         <a href="/usuarios" class="px-4 py-2 rounded-lg bg-gray-500 text-white hover:bg-gray-600 transition">
           Cancelar
         </a>
-        <button type="submit" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition">
+        <button type="submit" class="px-4 py-2 rounded-lg bg-blue-600 text-white hover:bg-blue-700 transition" <%= tipos.length === 0 ? 'disabled' : '' %>>
           Crear Usuario
         </button>
       </div>

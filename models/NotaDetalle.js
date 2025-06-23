@@ -12,11 +12,11 @@ const NotaDetalle = sequelize.define('NotaDetalle', {
     allowNull: false,
   },
   PRACTICA: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.DECIMAL(10,2),
     allowNull: false,
   },
   TEORIA: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.DECIMAL(10,2),
     allowNull: false,
   },
   FECHA: {

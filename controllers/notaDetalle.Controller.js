@@ -22,13 +22,26 @@ const mostrarFormularioCrear = async (req, res) => {
   }
 };
 
+const reactivar = async (req, res) => {
+  try {
+    await NotaDetalle.update(
+      { ESTATUS: true, FECHA_MODIFICACION: new Date() },
+      { where: { ID_NOTA_DETALLE: req.params.id } }
+    );
+    res.json({ ok: true });
+  } catch (error) {
+    console.error(error);
+    res.json({ ok: false });
+  }
+};
+
 const crear = async (req, res) => {
   const { ID_NOTA, PRACTICA, TEORIA, FECHA } = req.body;
   try {
     await NotaDetalle.create({
       ID_NOTA,
-      PRACTICA,
-      TEORIA,
+      PRACTICA: parseFloat(PRACTICA).toFixed(2),
+      TEORIA: parseFloat(TEORIA).toFixed(2),
       FECHA,
       ESTATUS: true,
       FECHA_CREACION: new Date(),
@@ -63,8 +76,8 @@ const actualizar = async (req, res) => {
   try {
     await NotaDetalle.update({
       ID_NOTA,
-      PRACTICA,
-      TEORIA,
+      PRACTICA: parseFloat(PRACTICA).toFixed(2),
+      TEORIA: parseFloat(TEORIA).toFixed(2),
       FECHA,
       FECHA_MODIFICACION: new Date()
     }, {
@@ -85,7 +98,7 @@ const actualizar = async (req, res) => {
 
 const eliminar = async (req, res) => {
   try {
-    await NotaDetalle.update({ ESTATUS: false }, {
+    await NotaDetalle.update({ ESTATUS: false, FECHA_MODIFICACION: new Date() }, {
       where: { ID_NOTA_DETALLE: req.params.id }
     });
     res.redirect('/notadetalle');
@@ -101,5 +114,6 @@ module.exports = {
   crear,
   mostrarFormularioEditar,
   actualizar,
-  eliminar
+  eliminar,
+  reactivar
 };

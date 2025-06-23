@@ -51,14 +51,20 @@
               <td class="py-2 px-4 border"><%= carrera.DESCRIPCION %></td>
               <td class="py-2 px-4 border text-sm whitespace-nowrap">
                 <div class="flex items-center gap-2">
-                  <a href="/carreras/editar/<%= carrera.ID_CARRERA %>" class="text-blue-600 hover:underline">
-                    <i class="fas fa-edit"></i> Editar
-                  </a>
-                  <form action="/carreras/eliminar/<%= carrera.ID_CARRERA %>" method="POST" onsubmit="return confirm('¿Eliminar esta carrera?')">
-                    <button type="submit" class="text-red-600 hover:underline">
-                      <i class="fas fa-trash-alt"></i> Eliminar
+                  <% if (carrera.ESTATUS) { %>
+                    <a href="/carreras/editar/<%= carrera.ID_CARRERA %>" class="text-blue-600 hover:underline">
+                      <i class="fas fa-edit"></i> Editar
+                    </a>
+                    <form action="/carreras/eliminar/<%= carrera.ID_CARRERA %>" method="POST" onsubmit="return confirm('¿Eliminar esta carrera?')">
+                      <button type="submit" class="text-red-600 hover:underline">
+                        <i class="fas fa-trash-alt"></i> Eliminar
+                      </button>
+                    </form>
+                  <% } else { %>
+                    <button onclick="mostrarModal(<%= carrera.ID_CARRERA %>)" class="text-green-600 hover:underline">
+                      <i class="fas fa-redo-alt"></i> Reactivar
                     </button>
-                  </form>
+                  <% } %>
                 </div>
               </td>
             </tr>
@@ -68,3 +74,51 @@
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<div id="modal-reactivar" class="fixed inset-0 bg-black bg-opacity-50 hidden justify-center items-center z-50">
+  <div class="bg-white rounded-lg shadow-lg p-6 w-full max-w-md">
+    <h2 class="text-xl font-semibold text-gray-800 mb-4">¿Deseas reactivar esta carrera?</h2>
+    <div class="flex justify-end gap-3">
+      <button onclick="cerrarModal()" class="px-4 py-2 bg-gray-300 rounded hover:bg-gray-400">Cancelar</button>
+      <button id="btnConfirmar" class="px-4 py-2 bg-green-600 text-white rounded hover:bg-green-700">Reactivar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let carreraIdAReactivar = null;
+
+  function mostrarModal(id) {
+    carreraIdAReactivar = id;
+    document.getElementById('modal-reactivar').classList.remove('hidden');
+    document.getElementById('modal-reactivar').classList.add('flex');
+  }
+
+  function cerrarModal() {
+    carreraIdAReactivar = null;
+    document.getElementById('modal-reactivar').classList.add('hidden');
+    document.getElementById('modal-reactivar').classList.remove('flex');
+  }
+
+  document.getElementById('btnConfirmar').addEventListener('click', async () => {
+    if (!carreraIdAReactivar) return;
+
+    try {
+      const res = await fetch(`/carreras/reactivar/${carreraIdAReactivar}`, {
+        method: 'POST'
+      });
+      const data = await res.json();
+      if (data.ok) {
+        location.reload();
+      } else {
+        alert("Ocurrió un error al reactivar la carrera.");
+        cerrarModal();
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error al enviar solicitud.");
+      cerrarModal();
+    }
+  });
+</script>

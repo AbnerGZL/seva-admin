@@ -61,6 +61,19 @@ module.exports = {
     }
   },
 
+  reactivar: async (req, res) => {
+    try {
+      await TipoUsuario.update(
+        { ESTATUS: true, FECHA_MODIFICACION: new Date() },
+        { where: { ID_TIPO: req.params.id } }
+      );
+      res.sendStatus(200);
+    } catch (error) {
+      console.error('Error al reactivar tipo:', error);
+      res.status(500).send('Error al reactivar tipo');
+    }
+  },
+
   eliminar: async (req, res) => {
     const { id } = req.params;
     try {

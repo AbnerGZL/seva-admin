@@ -28,15 +28,15 @@
         <tbody>
           <% if (notaDetalles.length === 0) { %>
             <tr>
-              <td colspan="6" class="py-4 px-4 text-center text-gray-500">No hay detalles registrados.</td>
+              <td colspan="7" class="py-4 px-4 text-center text-gray-500">No hay detalles registrados.</td>
             </tr>
           <% } else { %>
             <% notaDetalles.forEach(det => { %>
               <tr class="border-b hover:bg-gray-50">
                 <td class="py-2 px-4 border"><%= det.ID_NOTA_DETALLE %></td>
                 <td class="py-2 px-4 border">Nota #<%= det.ID_NOTA %></td>
-                <td class="py-2 px-4 border"><%= det.PRACTICA %></td>
-                <td class="py-2 px-4 border"><%= det.TEORIA %></td>
+                <td class="py-2 px-4 border"><%= parseFloat(det.PRACTICA).toFixed(2) %></td>
+                <td class="py-2 px-4 border"><%= parseFloat(det.TEORIA).toFixed(2) %></td>
                 <td class="py-2 px-4 border"><%= det.FECHA %></td>
                 <td class="px-4 py-2">
                   <% if (det.ESTATUS) { %>
@@ -46,15 +46,22 @@
                   <% } %> 
                 </td>
                 <td class="py-2 px-4 border text-center">
-                  <a href="/notadetalle/editar/<%= det.ID_NOTA_DETALLE %>" class="text-blue-600 hover:underline mr-2">
-                    Editar
-                  </a>
-                  <form action="/notadetalle/eliminar/<%= det.ID_NOTA_DETALLE %>" method="POST" class="inline">
-                    <button type="submit" class="text-red-600 hover:underline"
-                      onclick="return confirm('¿Estás seguro de eliminar este detalle?')">
-                      Eliminar
+                  <% if (det.ESTATUS) { %>
+                    <a href="/notadetalle/editar/<%= det.ID_NOTA_DETALLE %>" class="text-blue-600 hover:underline mr-2">
+                      Editar
+                    </a>
+                    <form action="/notadetalle/eliminar/<%= det.ID_NOTA_DETALLE %>" method="POST" class="inline">
+                      <button type="submit" class="text-red-600 hover:underline"
+                        onclick="return confirm('¿Estás seguro de eliminar este detalle?')">
+                        Eliminar
+                      </button>
+                    </form>
+                  <% } else { %>
+                    <button onclick="reactivarNotaDetalle(<%= det.ID_NOTA_DETALLE %>)"
+                      class="text-green-600 hover:underline">
+                      Reactivar
                     </button>
-                  </form>
+                  <% } %>
                 </td>
               </tr>
             <% }) %>
@@ -64,3 +71,25 @@
     </div>
   </div>
 </div>
+
+<script>
+  async function reactivarNotaDetalle(id) {
+    const confirmar = confirm("¿Deseas reactivar este detalle?");
+    if (!confirmar) return;
+
+    try {
+      const res = await fetch(`/notadetalle/reactivar/${id}`, {
+        method: "POST"
+      });
+      const data = await res.json();
+      if (data.ok) {
+        location.reload();
+      } else {
+        alert("Error al reactivar el detalle.");
+      }
+    } catch (error) {
+      console.error(error);
+      alert("Error al procesar la solicitud.");
+    }
+  }
+</script>

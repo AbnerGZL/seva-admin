@@ -35,9 +35,19 @@
                 <% } %>
               </td>
               <td class="px-4 py-2 text-center space-x-3">
-                <a href="/tipos/editar/<%= tipo.ID_TIPO %>" class="text-indigo-600 hover:text-indigo-800" title="Editar">
-                  <i class="fas fa-edit"></i>
-                </a>
+                <% if (tipo.ESTATUS) { %>
+                  <a href="/tipos/editar/<%= tipo.ID_TIPO %>" class="text-indigo-600 hover:text-indigo-800" title="Editar">
+                    <i class="fas fa-edit"></i>
+                  </a>
+                <% } else { %>
+                  <button 
+                    class="text-yellow-600 hover:text-yellow-800" 
+                    title="Reactivar y Editar"
+                    onclick="confirmarReactivacion(<%= tipo.ID_TIPO %>)"
+                  >
+                    <i class="fas fa-exclamation-circle"></i> Editar
+                  </button>
+                <% } %>
                 <form action="/tipos/eliminar/<%= tipo.ID_TIPO %>" method="POST" class="inline">
                   <button type="submit" class="text-red-600 hover:text-red-800" title="Eliminar">
                     <i class="fas fa-trash-alt"></i>
@@ -51,3 +61,41 @@
     </div>
   </div>
 </div>
+
+<!-- Modal -->
+<div id="modalReactivar" class="fixed inset-0 bg-black bg-opacity-50 hidden flex items-center justify-center z-50">
+  <div class="bg-white rounded-lg p-6 w-full max-w-md shadow-lg">
+    <h2 class="text-lg font-semibold mb-4">¿Reactivar Tipo de Usuario Inactivo?</h2>
+    <p class="text-gray-600 mb-6">Este tipo de usuario está inactivo. ¿Deseas reactivarlo y editarlo?</p>
+    <div class="flex justify-end space-x-2">
+      <button onclick="cerrarModal()" class="bg-gray-300 hover:bg-gray-400 text-gray-800 px-4 py-2 rounded">Cancelar</button>
+      <button id="btnConfirmar" onclick="reactivarYEditar()" class="bg-blue-600 hover:bg-blue-700 text-white px-4 py-2 rounded">Sí, Reactivar</button>
+    </div>
+  </div>
+</div>
+
+<script>
+  let tipoId = null;
+
+  function confirmarReactivacion(id) {
+    tipoId = id;
+    document.getElementById('modalReactivar').classList.remove('hidden');
+  }
+
+  function cerrarModal() {
+    document.getElementById('modalReactivar').classList.add('hidden');
+    tipoId = null;
+  }
+
+  async function reactivarYEditar() {
+    try {
+      await fetch(`/tipos/reactivar/${tipoId}`, {
+        method: 'POST'
+      });
+      window.location.href = `/tipos/editar/${tipoId}`;
+    } catch (error) {
+      console.error('Error al reactivar:', error);
+      alert('Hubo un error al reactivar el tipo de usuario.');
+    }
+  }
+</script>

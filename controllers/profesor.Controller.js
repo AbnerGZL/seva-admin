@@ -3,15 +3,7 @@ const { Profesor, Usuario, TipoUsuario } = require('../models');
 module.exports = {
   listar: async (req, res) => {
     try {
-      const profesores = await Profesor.findAll({
-        include: [{
-          model: Usuario,
-          as: 'usuario',
-          where: { ESTATUS: 1 },
-          include: [{ model: TipoUsuario, as: 'tipo' }]
-        }]
-      });
-
+      const profesores = await Profesor.findAll();
       res.render('profesores/listar', { profesores });
     } catch (error) {
       console.error(error);
@@ -27,7 +19,7 @@ module.exports = {
           {
             model: TipoUsuario,
             as: 'tipo',
-            where: { NOMBRE: 'Profesor' }
+            where: { NOMBRE: 'Profesor', ESTATUS: 1 }
           },
           {
             model: Profesor,
@@ -50,60 +42,60 @@ module.exports = {
     }
   },
 
-    crear: async (req, res) => {
+  crear: async (req, res) => {
     const { ID_USUARIO, NOMBRES, APELLIDOS, DNI, ESPECIALIDAD, TELEFONO } = req.body;
-    
-      try {
-        const usuario = await Usuario.findByPk(ID_USUARIO, {
-          include: ['profesor']
-        });
-    
-        if (usuario.profesor) {
-          throw new Error('Este usuario ya está registrado como profesor');
-        }
-    
-        await Profesor.create({
-          ID_USUARIO,
-          NOMBRES,
-          APELLIDOS,
-          ESPECIALIDAD,
-          TELEFONO,
-          DNI,
-          CORREO: usuario.EMAIL,
-          ESTATUS: true,
-          FECHA_CREACION: new Date(),
-          FECHA_MODIFICACION: new Date()
-        });
-    
-        res.redirect('/profesores');
-      } catch (error) {
-        console.error('Error al crear profesor:', error);
-    
-        const usuarios = await Usuario.findAll({
-          where: { ESTATUS: 1 },
-          include: [
-            {
-              model: TipoUsuario,
-              as: 'tipo',
-              where: { NOMBRE: 'Profesor' }
-            },
-            {
-              model: Profesor,
-              as: 'profesor',
-              required: false
-            }
-          ]
-        });
-    
-        const disponibles = usuarios.filter(u => !u.profesor);
-    
-        res.render('profesores/crear', {
-          usuarios: disponibles,
-          formData: req.body,
-          error: error.message
-        });
+
+    try {
+      const usuario = await Usuario.findByPk(ID_USUARIO, {
+        include: ['profesor']
+      });
+
+      if (usuario.profesor) {
+        throw new Error('Este usuario ya está registrado como profesor');
       }
-    },
+
+      await Profesor.create({
+        ID_USUARIO,
+        NOMBRES,
+        APELLIDOS,
+        ESPECIALIDAD,
+        TELEFONO,
+        DNI,
+        CORREO: usuario.EMAIL,
+        ESTATUS: true,
+        FECHA_CREACION: new Date(),
+        FECHA_MODIFICACION: new Date()
+      });
+
+      res.redirect('/profesores');
+    } catch (error) {
+      console.error('Error al crear profesor:', error);
+
+      const usuarios = await Usuario.findAll({
+        where: { ESTATUS: 1 },
+        include: [
+          {
+            model: TipoUsuario,
+            as: 'tipo',
+            where: { NOMBRE: 'Profesor', ESTATUS: 1 }
+          },
+          {
+            model: Profesor,
+            as: 'profesor',
+            required: false
+          }
+        ]
+      });
+
+      const disponibles = usuarios.filter(u => !u.profesor);
+
+      res.render('profesores/crear', {
+        usuarios: disponibles,
+        formData: req.body,
+        error: error.message
+      });
+    }
+  },
 
   editarForm: async (req, res) => {
     try {
@@ -118,7 +110,7 @@ module.exports = {
   },
 
   editar: async (req, res) => {
-  const { NOMBRES, APELLIDOS, DNI, ESPECIALIDAD, TELEFONO, CORREO } = req.body;
+    const { NOMBRES, APELLIDOS, DNI, ESPECIALIDAD, TELEFONO, CORREO } = req.body;
 
     try {
       await Profesor.update({
@@ -157,6 +149,27 @@ module.exports = {
     } catch (error) {
       console.error(error);
       res.render('error', { mensaje: 'Error al eliminar profesor' });
+    }
+  },
+
+  reactivar: async (req, res) => {
+    try {
+      const { id } = req.params;
+
+      const profesor = await Profesor.findByPk(id);
+      if (!profesor) {
+        return res.status(404).json({ mensaje: 'Profesor no encontrado' });
+      }
+
+      await Profesor.update(
+        { ESTATUS: true, FECHA_MODIFICACION: new Date() },
+        { where: { ID_PROFESOR: id } }
+      );
+
+      res.json({ ok: true });
+    } catch (error) {
+      console.error('Error al reactivar profesor:', error);
+      res.status(500).json({ mensaje: 'Error al reactivar profesor' });
     }
   }
 };

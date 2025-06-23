@@ -57,6 +57,23 @@ module.exports = {
     }
   },
 
+  reactivar: async (req, res) => {
+    try {
+      await Carrera.update(
+        {
+          ESTATUS: true,
+          FECHA_MODIFICACION: new Date()
+        },
+        { where: { ID_CARRERA: req.params.id } }
+      );
+      res.json({ ok: true });
+    } catch (error) {
+      console.error(error);
+      res.json({ ok: false });
+    }
+  },
+
+
     eliminar: async (req, res) => {
       try {
         await Carrera.update({ ESTATUS: false }, { where: { ID_CARRERA: req.params.id } });

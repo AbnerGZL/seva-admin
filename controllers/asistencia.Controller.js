@@ -155,11 +155,25 @@ const eliminar = async (req, res) => {
   }
 };
 
+const reactivar = async (req, res) => {
+  try {
+    await Asistencia.update(
+      { ESTATUS: true, FECHA_MODIFICACION: new Date() },
+      { where: { ID_ASISTENCIA: req.params.id } }
+    );
+    res.json({ ok: true });
+  } catch (error) {
+    console.error(error);
+    res.json({ ok: false });
+  }
+};
+
 module.exports = {
   listar,
   mostrarFormularioCrear,
   crear,
   mostrarFormularioEditar,
   actualizar,
-  eliminar
+  eliminar,
+  reactivar
 };

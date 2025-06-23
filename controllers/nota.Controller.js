@@ -1,12 +1,31 @@
-const { Nota, Matricula, Curso } = require('../models');
+const { Nota, Matricula, Curso, Estudiante, Carrera } = require('../models');
 
 module.exports = {
   listar: async (req, res) => {
     try {
       const notas = await Nota.findAll({
         include: [
-          { model: Matricula, as: 'matricula' },
-          { model: Curso, as: 'curso' }
+          {
+            model: Matricula,
+            as: 'matricula',
+            include: [
+              {
+                model: Estudiante,
+                as: 'estudiante',
+                attributes: ['NOMBRES', 'APELLIDOS']
+              },
+              {
+                model: Carrera,
+                as: 'carrera',
+                attributes: ['NOMBRE']
+              }
+            ]
+          },
+          {
+            model: Curso,
+            as: 'curso',
+            attributes: ['NOMBRE']
+          }
         ]
       });
       res.render('notas/listar', { notas });
@@ -18,10 +37,27 @@ module.exports = {
 
   crearForm: async (req, res) => {
     try {
-      const [matriculas, cursos] = await Promise.all([
-        Matricula.findAll({ where: { ESTATUS: 1 } }),
-        Curso.findAll({ where: { ESTATUS: 1 } })
-      ]);
+      const matriculas = await Matricula.findAll({
+        where: {
+          ESTATUS: 1,
+          ESTADO: 'Vigencia'
+        },
+        include: [
+          {
+            model: Estudiante,
+            as: 'estudiante',
+            attributes: ['NOMBRES', 'APELLIDOS']
+          },
+          {
+            model: Carrera,
+            as: 'carrera',
+            attributes: ['NOMBRE']
+          }
+        ]
+      });
+
+      const cursos = await Curso.findAll({ where: { ESTATUS: 1 } });
+
       res.render('notas/crear', { matriculas, cursos, formData: null, error: null });
     } catch (error) {
       console.error(error);
@@ -41,7 +77,16 @@ module.exports = {
     } catch (error) {
       console.error(error);
       const [matriculas, cursos] = await Promise.all([
-        Matricula.findAll({ where: { ESTATUS: 1 } }),
+        Matricula.findAll({
+          where: {
+            ESTATUS: 1,
+            ESTADO: 'Vigencia'
+          },
+          include: [
+            { model: Estudiante, as: 'estudiante' },
+            { model: Carrera, as: 'carrera' }
+          ]
+        }),
         Curso.findAll({ where: { ESTATUS: 1 } })
       ]);
       res.render('notas/crear', { matriculas, cursos, formData: req.body, error: 'Error al crear nota' });
@@ -52,7 +97,16 @@ module.exports = {
     try {
       const nota = await Nota.findByPk(req.params.id);
       const [matriculas, cursos] = await Promise.all([
-        Matricula.findAll({ where: { ESTATUS: 1 } }),
+        Matricula.findAll({
+          where: {
+            ESTATUS: 1,
+            ESTADO: 'Vigencia'
+          },
+          include: [
+            { model: Estudiante, as: 'estudiante' },
+            { model: Carrera, as: 'carrera' }
+          ]
+        }),
         Curso.findAll({ where: { ESTATUS: 1 } })
       ]);
       res.render('notas/editar', { nota, matriculas, cursos, error: null });
@@ -76,10 +130,32 @@ module.exports = {
       console.error(error);
       const nota = await Nota.findByPk(req.params.id);
       const [matriculas, cursos] = await Promise.all([
-        Matricula.findAll({ where: { ESTATUS: 1 } }),
+        Matricula.findAll({
+          where: {
+            ESTATUS: 1,
+            ESTADO: 'Vigencia'
+          },
+          include: [
+            { model: Estudiante, as: 'estudiante' },
+            { model: Carrera, as: 'carrera' }
+          ]
+        }),
         Curso.findAll({ where: { ESTATUS: 1 } })
       ]);
       res.render('notas/editar', { nota, matriculas, cursos, error: 'Error al actualizar nota' });
+    }
+  },
+
+  reactivar: async (req, res) => {
+    try {
+      await Nota.update(
+        { ESTATUS: 1, FECHA_MODIFICACION: new Date() },
+        { where: { ID_NOTA: req.params.id } }
+      );
+      res.json({ ok: true });
+    } catch (error) {
+      console.error(error);
+      res.json({ ok: false });
     }
   },
 

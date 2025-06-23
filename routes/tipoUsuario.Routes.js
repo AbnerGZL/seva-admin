@@ -8,5 +8,6 @@ router.post('/crear', tipoController.crear);
 router.get('/editar/:id', tipoController.editarForm);
 router.post('/editar/:id', tipoController.editar);
 router.post('/eliminar/:id', tipoController.eliminar);
+router.post('/reactivar/:id', tipoController.reactivar);
 
 module.exports = router;

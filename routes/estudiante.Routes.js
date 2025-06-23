@@ -8,5 +8,6 @@ router.post('/crear', estudianteController.crear);
 router.get('/editar/:id', estudianteController.editarForm);
 router.post('/editar/:id', estudianteController.editar);
 router.post('/eliminar/:id', estudianteController.eliminar);
+router.post('/reactivar/:id', estudianteController.reactivar);
 
 module.exports = router;
