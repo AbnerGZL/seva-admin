@@ -43,12 +43,16 @@
         </select>
       </div>
 
-      <!-- Código -->
+      <!-- Código generado automáticamente -->
       <div>
-        <label for="CODIGOU" class="block mb-1 text-gray-700 font-medium">Código</label>
-        <input type="text" id="CODIGOU" name="CODIGOU" required
-          value="<%= formData ? formData.CODIGOU : '' %>"
-          class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-100">
+        <label class="block mb-1 text-gray-700 font-medium">Código</label>
+        <% if (formData && formData.CODIGOU) { %>
+          <input type="text" value="<%= formData.CODIGOU %>" readonly
+            class="w-full px-4 py-2 border rounded-lg shadow-sm bg-gray-100 cursor-not-allowed text-gray-500">
+        <% } else { %>
+          <input type="text" value="Se generará automáticamente" readonly
+            class="w-full px-4 py-2 border rounded-lg shadow-sm bg-gray-100 cursor-not-allowed text-gray-400">
+        <% } %>
       </div>
 
       <!-- Email -->

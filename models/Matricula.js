@@ -31,6 +31,10 @@ const Matricula = sequelize.define('Matricula', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  CONDICION: {
+    type: DataTypes.STRING(20),
+    allowNull: true,
+  },
   ESTATUS: {
     type: DataTypes.BOOLEAN,
     allowNull: false,

@@ -23,7 +23,7 @@ const Nota = sequelize.define('Nota', {
     type: DataTypes.DECIMAL(10, 2),
     allowNull: false,
   },
-  CONDICION: {
+  UNIDAD: {
     type: DataTypes.STRING(20),
     allowNull: false,
   },

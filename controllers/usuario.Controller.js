@@ -1,6 +1,20 @@
 const { Usuario, TipoUsuario } = require('../models');
 const bcrypt = require('bcryptjs');
 
+const generarCodigoUsuarioUnico = async () => {
+  let codigo;
+  let existe = true;
+
+  while (existe) {
+    const random = Math.floor(100000 + Math.random() * 900000);
+    codigo = `USR-${random}`;
+    const existente = await Usuario.findOne({ where: { CODIGOU: codigo } });
+    existe = !!existente;
+  }
+
+  return codigo;
+};
+
 module.exports = {
   listar: async (req, res) => {
     try {
@@ -17,7 +31,13 @@ module.exports = {
   crearForm: async (req, res) => {
     try {
       const tipos = await TipoUsuario.findAll({ where: { ESTATUS: 1 } });
-      res.render('usuarios/crear', { tipos, formData: null, error: null });
+      const nuevoCodigo = await generarCodigoUsuarioUnico();
+
+      res.render('usuarios/crear', {
+        tipos,
+        formData: { CODIGOU: nuevoCodigo },
+        error: null
+      });
     } catch (error) {
       console.error(error);
       res.render('error', { mensaje: 'Error al cargar formulario' });
@@ -25,37 +45,39 @@ module.exports = {
   },
 
   crear: async (req, res) => {
-    const { ID_TIPO, CODIGOU, EMAIL, CONTRASEÑA } = req.body;
+    const { ID_TIPO, EMAIL, CONTRASEÑA } = req.body;
 
     try {
-      if (!ID_TIPO || !CODIGOU || !EMAIL || !CONTRASEÑA) {
+      if (!ID_TIPO || !EMAIL || !CONTRASEÑA) {
         const tipos = await TipoUsuario.findAll({ where: { ESTATUS: 1 } });
         return res.render('usuarios/crear', {
           tipos,
-          formData: req.body,
+          formData: { ...req.body },
           error: 'Todos los campos son obligatorios'
         });
       }
 
       const tipo = await TipoUsuario.findByPk(ID_TIPO);
       if (!tipo) {
-        const tipos = await TipoUsuario.findAll();
+        const tipos = await TipoUsuario.findAll({ where: { ESTATUS: 1 } });
         return res.render('usuarios/crear', {
           tipos,
-          formData: req.body,
+          formData: { ...req.body },
           error: 'Tipo de usuario no válido'
         });
       }
 
       const usuarioExistente = await Usuario.findOne({ where: { EMAIL } });
       if (usuarioExistente) {
-        const tipos = await TipoUsuario.findAll();
+        const tipos = await TipoUsuario.findAll({ where: { ESTATUS: 1 } });
         return res.render('usuarios/crear', {
           tipos,
-          formData: req.body,
+          formData: { ...req.body },
           error: 'El email ya está registrado'
         });
       }
+
+      const CODIGOU = await generarCodigoUsuarioUnico();
 
       await Usuario.create({
         ID_TIPO,
@@ -70,14 +92,16 @@ module.exports = {
       res.redirect('/usuarios');
     } catch (error) {
       console.error('Error al crear usuario:', error);
-      const tipos = await TipoUsuario.findAll();
+      const tipos = await TipoUsuario.findAll({ where: { ESTATUS: 1 } });
       let errorMessage = 'Error al crear usuario';
       if (error.name === 'SequelizeValidationError') {
         errorMessage = error.errors.map(e => e.message).join(', ');
       }
+
+      const nuevoCodigo = await generarCodigoUsuarioUnico();
       res.render('usuarios/crear', {
         tipos,
-        formData: req.body,
+        formData: { ...req.body, CODIGOU: nuevoCodigo },
         error: errorMessage
       });
     }
@@ -92,7 +116,6 @@ module.exports = {
         return res.render('error', { mensaje: 'Usuario no encontrado' });
       }
 
-      // Si el usuario está inactivo, mostrar confirmación
       if (!usuario.ESTATUS) {
         return res.send(`
           <script>
@@ -109,23 +132,6 @@ module.exports = {
     } catch (error) {
       console.error(error);
       res.render('error', { mensaje: 'Error al cargar formulario' });
-    }
-  },
-
-  reactivar: async (req, res) => {
-    try {
-      const { id } = req.params;
-      await Usuario.update(
-        {
-          ESTATUS: 1,
-          FECHA_MODIFICACION: new Date()
-        },
-        { where: { ID_USUARIO: id } }
-      );
-      res.json({ success: true });
-    } catch (error) {
-      console.error(error);
-      res.status(500).json({ success: false, message: 'Error al reactivar usuario' });
     }
   },
 
@@ -162,6 +168,23 @@ module.exports = {
         tipos,
         error: errorMessage
       });
+    }
+  },
+
+  reactivar: async (req, res) => {
+    try {
+      const { id } = req.params;
+      await Usuario.update(
+        {
+          ESTATUS: 1,
+          FECHA_MODIFICACION: new Date()
+        },
+        { where: { ID_USUARIO: id } }
+      );
+      res.json({ success: true });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ success: false, message: 'Error al reactivar usuario' });
     }
   },
 

@@ -20,9 +20,9 @@
             <th class="py-2 px-4 border-b">ID</th>
             <th class="py-2 px-4 border-b">Matrícula</th>
             <th class="py-2 px-4 border-b">Curso</th>
-            <th class="py-2 px-4 border-b">Prom. Parcial</th>
+            <th class="py-2 px-4 border-b">Prom. Practica</th>
             <th class="py-2 px-4 border-b">Prom. Teoría</th>
-            <th class="py-2 px-4 border-b">Condición</th>
+            <th class="py-2 px-4 border-b">Unidad</th>
             <th class="py-2 px-4 border-b">Estatus</th>
             <th class="py-2 px-4 border-b">Acciones</th>
           </tr>
@@ -42,11 +42,7 @@
               <td class="py-2 px-4 border-b"><%= nota.curso?.NOMBRE || 'N/A' %></td>
               <td class="py-2 px-4 border-b"><%= nota.PROMEDIOP %></td>
               <td class="py-2 px-4 border-b"><%= nota.PROMEDIOT %></td>
-              <td class="py-2 px-4 border-b">
-                <span class="font-semibold <%= nota.CONDICION === 'Aprobado' ? 'text-green-600' : 'text-red-600' %>">
-                  <%= nota.CONDICION %>
-                </span>
-              </td>
+              <td class="py-2 px-4 border-b"><%= nota.UNIDAD %></td>
               <td class="px-4 py-2">
                 <% if (nota.ESTATUS) { %>
                   <span class="text-green-600 font-semibold">Activo</span>
