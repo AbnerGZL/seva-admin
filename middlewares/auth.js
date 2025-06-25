@@ -1,20 +1,14 @@
-const isAuthenticated = (req, res, next) => {
-  if (req.session.usuario) {
-    return next();
-  }
-  res.redirect('/login');
-};
-
-const isAdmin = (req, res, next) => {
-  if (req.session.usuario?.ID_TIPO === 1) {
-    return next();
-  }
-  res.status(403).render('error', {
-    message: 'Acceso denegado: se requieren privilegios de administrador'
-  });
-};
-
 module.exports = {
-  isAuthenticated,
-  isAdmin
+  authMiddleware: (req, res, next) => {
+    if (!req.session.usuario) {
+      return res.redirect('/login');
+    }
+    next();
+  },
+  adminMiddleware: (req, res, next) => {
+    if (req.session.usuario?.tipo !== 'Admin') {
+      return res.render('error', { mensaje: 'Acceso no autorizado' });
+    }
+    next();
+  }
 };

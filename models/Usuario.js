@@ -21,7 +21,7 @@ const Usuario = sequelize.define('Usuario', {
     allowNull: false,
   },
   CONTRASEÑA: {
-    type: DataTypes.STRING(45),
+    type: DataTypes.STRING(250),
     allowNull: false,
   },
   FECHA_CREACION: {

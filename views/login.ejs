@@ -1,0 +1,41 @@
+<%- include('partials/header', { title: 'Iniciar Sesión' }) %>
+
+<div class="min-h-screen flex items-center justify-center bg-gray-100 px-4">
+  <div class="w-full max-w-md bg-white p-8 rounded-xl shadow-lg">
+    <div class="mb-6 text-center">
+      <h1 class="text-3xl font-bold text-gray-800 mb-2 flex items-center justify-center gap-2">
+        <i class="fas fa-user text-blue-600"></i> Iniciar Sesión
+      </h1>
+      <p class="text-gray-500 text-sm">Accede al panel administrativo</p>
+    </div>
+
+    <% if (error) { %>
+      <div class="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-5">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <form action="/login" method="POST" class="space-y-5">
+      <div>
+        <label for="EMAIL" class="block text-sm font-medium text-gray-700 mb-1">Email</label>
+        <input type="email" id="EMAIL" name="EMAIL"
+               class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-200 focus:outline-none"
+               required>
+      </div>
+
+      <div>
+        <label for="CONTRASEÑA" class="block text-sm font-medium text-gray-700 mb-1">Contraseña</label>
+        <input type="password" id="CONTRASEÑA" name="CONTRASEÑA"
+               class="w-full px-4 py-2 border rounded-lg shadow-sm focus:ring focus:ring-blue-200 focus:outline-none"
+               required>
+      </div>
+
+      <div class="flex justify-end">
+        <button type="submit"
+                class="bg-blue-600 hover:bg-blue-700 transition text-white font-semibold px-6 py-2 rounded-lg shadow">
+          Iniciar Sesión
+        </button>
+      </div>
+    </form>
+  </div>
+</div>
