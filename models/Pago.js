@@ -12,7 +12,7 @@ const Pago = sequelize.define('Pago', {
     allowNull: false,
   },
   FECHA_PAGO: {
-    type: DataTypes.DATEONLY,
+    type: DataTypes.DATE,
     allowNull: false,
   },
   MONTO: {
@@ -21,31 +21,22 @@ const Pago = sequelize.define('Pago', {
   },
   FORMATO: {
     type: DataTypes.STRING(45),
-    allowNull: false,
   },
   RECIBO: {
     type: DataTypes.STRING(45),
-    allowNull: false,
   },
   OBSERVACION: {
     type: DataTypes.STRING(100),
-    allowNull: false,
   },
   ESTATUS: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  FECHA_CREACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  FECHA_MODIFICACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
+    defaultValue: true
+  }
 }, {
   tableName: 'PAGO',
-  timestamps: false,
+  timestamps: true,
+  createdAt: 'FECHA_CREACION',
+  updatedAt: 'FECHA_ACTUALIZACION'
 });
 
 module.exports = Pago;

@@ -19,6 +19,7 @@ const pagoRoutes = require('./routes/pago.Routes');
 const notaRoutes = require('./routes/nota.Routes');
 const asistenciaRoutes = require('./routes/asistencia.Routes');
 const notaDetalleRoutes = require('./routes/notaDetalle.Routes');
+const cronogramaRoutes = require('./routes/cronograma.Routes')
 
 const { authMiddleware, adminMiddleware } = require('./middlewares/auth');
 
@@ -58,6 +59,7 @@ app.use("/pagos", pagoRoutes);
 app.use("/notas", notaRoutes);
 app.use("/asistencias", asistenciaRoutes);
 app.use("/notadetalle", notaDetalleRoutes);
+app.use("/cronogramas", cronogramaRoutes);
 
 db.sequelize.sync({ force: false }).then(() => {
   const PORT = process.env.PORT || 3000;

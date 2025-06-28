@@ -3,7 +3,9 @@ const { Curso, Profesor } = require('../models');
 module.exports = {
   listar: async (req, res) => {
     try {
-      const cursos = await Curso.findAll({ include: { model: Profesor, as: 'profesor' } });
+      const cursos = await Curso.findAll({
+        include: { model: Profesor, as: 'profesor' }
+      });
       res.render('cursos/listar', { cursos });
     } catch (error) {
       console.error(error);
@@ -34,13 +36,17 @@ module.exports = {
         HORAS,
         ESTATUS: true,
         FECHA_CREACION: new Date(),
-        FECHA_MODIFICACION: new Date()
+        FECHA_ACTUALIZACION: new Date()
       });
       res.redirect('/cursos');
     } catch (error) {
       console.error(error);
       const profesores = await Profesor.findAll({ where: { ESTATUS: true } });
-      res.render('cursos/crear', { profesores, formData: req.body, error: error.message });
+      res.render('cursos/crear', {
+        profesores,
+        formData: req.body,
+        error: 'Error al crear curso: ' + error.message
+      });
     }
   },
 
@@ -66,7 +72,7 @@ module.exports = {
         CREDITOS,
         DURACION,
         HORAS,
-        FECHA_MODIFICACION: new Date()
+        FECHA_ACTUALIZACION: new Date()
       }, {
         where: { ID_CURSO: req.params.id }
       });
@@ -75,13 +81,20 @@ module.exports = {
       console.error(error);
       const curso = await Curso.findByPk(req.params.id);
       const profesores = await Profesor.findAll({ where: { ESTATUS: true } });
-      res.render('cursos/editar', { curso, profesores, error: error.message });
+      res.render('cursos/editar', {
+        curso,
+        profesores,
+        error: 'Error al actualizar curso: ' + error.message
+      });
     }
   },
 
   eliminar: async (req, res) => {
     try {
-      await Curso.update({ ESTATUS: false }, { where: { ID_CURSO: req.params.id } });
+      await Curso.update(
+        { ESTATUS: false, FECHA_ACTUALIZACION: new Date() },
+        { where: { ID_CURSO: req.params.id } }
+      );
       res.redirect('/cursos');
     } catch (error) {
       console.error(error);
@@ -92,7 +105,7 @@ module.exports = {
   reactivar: async (req, res) => {
     try {
       await Curso.update(
-        { ESTATUS: true, FECHA_MODIFICACION: new Date() },
+        { ESTATUS: true, FECHA_ACTUALIZACION: new Date() },
         { where: { ID_CURSO: req.params.id } }
       );
       res.json({ ok: true });
@@ -101,5 +114,4 @@ module.exports = {
       res.json({ ok: false });
     }
   }
-
 };

@@ -20,7 +20,12 @@ module.exports = {
     try {
       const estudiantes = await Estudiante.findAll({ where: { ESTATUS: true } });
       const carreras = await Carrera.findAll({ where: { ESTATUS: true } });
-      res.render('matriculas/crear', { estudiantes, carreras, formData: null, error: null });
+      res.render('matriculas/crear', {
+        estudiantes,
+        carreras,
+        formData: null,
+        error: null
+      });
     } catch (error) {
       console.error(error);
       res.render('error', { mensaje: 'Error al cargar formulario de matrícula' });
@@ -33,7 +38,7 @@ module.exports = {
         ...req.body,
         ESTATUS: true,
         FECHA_CREACION: new Date(),
-        FECHA_MODIFICACION: new Date()
+        FECHA_ACTUALIZACION: new Date()
       });
       res.redirect('/matriculas');
     } catch (error) {
@@ -52,14 +57,19 @@ module.exports = {
   editarForm: async (req, res) => {
     try {
       const matricula = await Matricula.findByPk(req.params.id);
-      const estudiantes = await Estudiante.findAll({ where: { ESTATUS: true } });
-      const carreras = await Carrera.findAll({ where: { ESTATUS: true } });
-
       if (!matricula) {
         return res.render('error', { mensaje: 'Matrícula no encontrada' });
       }
 
-      res.render('matriculas/editar', { matricula, estudiantes, carreras, error: null });
+      const estudiantes = await Estudiante.findAll({ where: { ESTATUS: true } });
+      const carreras = await Carrera.findAll({ where: { ESTATUS: true } });
+
+      res.render('matriculas/editar', {
+        matricula,
+        estudiantes,
+        carreras,
+        error: null
+      });
     } catch (error) {
       console.error(error);
       res.render('error', { mensaje: 'Error al cargar formulario de edición' });
@@ -71,7 +81,7 @@ module.exports = {
       await Matricula.update(
         {
           ...req.body,
-          FECHA_MODIFICACION: new Date()
+          FECHA_ACTUALIZACION: new Date()
         },
         { where: { ID_MATRICULA: req.params.id } }
       );
@@ -95,7 +105,7 @@ module.exports = {
       await Matricula.update(
         {
           ESTATUS: true,
-          FECHA_MODIFICACION: new Date()
+          FECHA_ACTUALIZACION: new Date()
         },
         { where: { ID_MATRICULA: req.params.id } }
       );
@@ -106,11 +116,13 @@ module.exports = {
     }
   },
 
-
   eliminar: async (req, res) => {
     try {
       await Matricula.update(
-        { ESTATUS: false, FECHA_MODIFICACION: new Date() },
+        {
+          ESTATUS: false,
+          FECHA_ACTUALIZACION: new Date()
+        },
         { where: { ID_MATRICULA: req.params.id } }
       );
       res.redirect('/matriculas');

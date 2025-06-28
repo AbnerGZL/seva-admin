@@ -15,32 +15,26 @@ const Usuario = sequelize.define('Usuario', {
   CODIGOU: {
     type: DataTypes.STRING(10),
     allowNull: false,
+    unique: true
   },
   EMAIL: {
     type: DataTypes.STRING(45),
     allowNull: false,
+    unique: true
   },
   CONTRASEÑA: {
     type: DataTypes.STRING(250),
     allowNull: false,
   },
-  FECHA_CREACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW
-  },
-  FECHA_MODIFICACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-    defaultValue: DataTypes.NOW
-  },
   ESTATUS: {
-    type: DataTypes.TINYINT,
-    allowNull: false,
-  },
+    type: DataTypes.BOOLEAN,
+    defaultValue: true
+  }
 }, {
   tableName: 'USUARIOS',
-  timestamps: false,
+  timestamps: true,
+  createdAt: 'FECHA_CREACION',
+  updatedAt: 'FECHA_ACTUALIZACION'
 });
 
 module.exports = Usuario;

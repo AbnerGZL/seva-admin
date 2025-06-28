@@ -18,12 +18,12 @@
         <thead>
           <tr class="bg-gray-100 text-gray-700 text-left">
             <th class="py-2 px-4 border-b">ID</th>
-            <th class="py-2 px-4 border-b">Matrícula</th>
+            <th class="py-2 px-4 border-b">Estudiante</th>
             <th class="py-2 px-4 border-b">Curso</th>
-            <th class="py-2 px-4 border-b">Prom. Practica</th>
+            <th class="py-2 px-4 border-b">Prom. Práctica</th>
             <th class="py-2 px-4 border-b">Prom. Teoría</th>
             <th class="py-2 px-4 border-b">Unidad</th>
-            <th class="py-2 px-4 border-b">Estatus</th>
+            <th class="py-2 px-4 border-b">Estado</th>
             <th class="py-2 px-4 border-b">Acciones</th>
           </tr>
         </thead>
@@ -31,18 +31,32 @@
           <% notas.forEach(nota => { %>
             <tr class="hover:bg-gray-50">
               <td class="py-2 px-4 border-b"><%= nota.ID_NOTA %></td>
+
+              <!-- Estudiante + carrera + ciclo -->
               <td class="py-2 px-4 border-b">
-                <% if (nota.matricula?.estudiante && nota.matricula?.carrera) { %>
-                  <strong><%= nota.matricula.estudiante.NOMBRES %> <%= nota.matricula.estudiante.APELLIDOS %></strong><br>
-                  <span class="text-sm text-gray-600"><%= nota.matricula.carrera.NOMBRE %> - Ciclo <%= nota.matricula.CICLO %></span>
+                <% if (
+                    nota.cronograma &&
+                    nota.cronograma.matricula?.estudiante &&
+                    nota.cronograma.matricula?.carrera
+                  ) { %>
+                  <strong>
+                    <%= nota.cronograma.matricula.estudiante.NOMBRES %> <%= nota.cronograma.matricula.estudiante.APELLIDOS %>
+                  </strong><br>
+                  <span class="text-sm text-gray-600">
+                    <%= nota.cronograma.matricula.carrera.NOMBRE %> - Ciclo <%= nota.cronograma.matricula.CICLO %>
+                  </span>
                 <% } else { %>
                   <span class="text-red-600">Información incompleta</span>
                 <% } %>
               </td>
+
+              <!-- Curso -->
               <td class="py-2 px-4 border-b"><%= nota.curso?.NOMBRE || 'N/A' %></td>
+
               <td class="py-2 px-4 border-b"><%= nota.PROMEDIOP %></td>
               <td class="py-2 px-4 border-b"><%= nota.PROMEDIOT %></td>
               <td class="py-2 px-4 border-b"><%= nota.UNIDAD %></td>
+
               <td class="px-4 py-2">
                 <% if (nota.ESTATUS) { %>
                   <span class="text-green-600 font-semibold">Activo</span>
@@ -50,6 +64,7 @@
                   <span class="text-red-600 font-semibold">Inactivo</span>
                 <% } %>
               </td>
+
               <td class="py-2 px-4 border-b">
                 <div class="flex items-center gap-2">
                   <% if (nota.ESTATUS) { %>

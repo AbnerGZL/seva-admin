@@ -11,7 +11,8 @@ const {
   Matricula,
   Pago,
   Asistencia,
-  NotaDetalle
+  NotaDetalle,
+  Cronograma
 } = require('../models');
 
 router.get('/', async (req, res) => {
@@ -27,7 +28,8 @@ router.get('/', async (req, res) => {
       totalMatriculas,
       totalPagos,
       totalAsistencias,
-      totalNotaDetalles
+      totalNotaDetalles,
+      totalCronograma
     ] = await Promise.all([
       Estudiante.count({ where: { ESTATUS: 1 } }),
       Curso.count({ where: { ESTATUS: 1 } }),
@@ -39,7 +41,8 @@ router.get('/', async (req, res) => {
       Matricula.count({ where: { ESTATUS: 1 } }),
       Pago.count({ where: { ESTATUS: 1 } }),
       Asistencia.count({ where: { ESTATUS: 1 } }),
-      NotaDetalle.count({ where: { ESTATUS: 1 } })
+      NotaDetalle.count({ where: { ESTATUS: 1 } }),
+      Cronograma.count({ where: { ESTATUS: 1 } }) 
     ]);
 
     res.render('dashboard', {
@@ -53,7 +56,8 @@ router.get('/', async (req, res) => {
       totalMatriculas,
       totalPagos,
       totalAsistencias,
-      totalNotaDetalles
+      totalNotaDetalles,
+      totalCronograma
     });
   } catch (error) {
     console.error(error);

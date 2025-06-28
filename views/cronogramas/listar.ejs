@@ -1,0 +1,90 @@
+<%- include('../partials/header', { title: 'Cronogramas' }) %>
+<%- include('../partials/navbar') %>
+
+<div class="max-w-7xl mx-auto px-4 py-8">
+  <div class="bg-white p-6 rounded-lg shadow">
+    <div class="flex justify-between items-center mb-6">
+      <h1 class="text-2xl font-bold text-gray-800 flex items-center gap-2">
+        <i class="fas fa-calendar-alt text-indigo-600"></i> Listado de Cronogramas
+      </h1>
+      <a href="/cronogramas/crear" class="bg-indigo-600 hover:bg-indigo-700 text-white px-4 py-2 rounded-lg">
+        <i class="fas fa-plus mr-2"></i> Nuevo Cronograma
+      </a>
+    </div>
+
+    <div class="overflow-x-auto">
+      <table class="min-w-full bg-white border border-gray-200 rounded">
+        <thead class="bg-gray-100 text-gray-700 text-sm">
+          <tr>
+            <th class="px-4 py-2 border">Matricula</th>
+            <th class="px-4 py-2 border">Curso</th>
+            <th class="px-4 py-2 border">Estudiante</th>
+            <th class="px-4 py-2 border">Profesor</th>
+            <th class="px-4 py-2 border">Cursación</th>
+            <th class="px-4 py-2 border">Estatus</th>
+            <th class="px-4 py-2 border">Acciones</th>
+          </tr>
+        </thead>
+        <tbody class="text-sm text-gray-800">
+          <% if (cronogramas.length === 0) { %>
+            <tr>
+              <td colspan="7" class="text-center py-4 text-gray-500">
+                No hay cronogramas registrados.
+              </td>
+            </tr>
+          <% } else { %>
+            <% cronogramas.forEach(c => { %>
+              <tr class="hover:bg-gray-50">
+                <td class="px-4 py-2 border">
+                  <%= c.matricula?.carrera?.NOMBRE || 'N/A' %>
+                </td>
+                <td class="px-4 py-2 border">
+                  <%= c.curso?.NOMBRE || 'N/A' %>
+                </td>
+                <td class="px-4 py-2 border">
+                  <%= c.matricula?.estudiante?.NOMBRES %> <%= c.matricula?.estudiante?.APELLIDOS %>
+                </td>
+                <td class="px-4 py-2 border">
+                  <%= c.profesor?.NOMBRES %> <%= c.profesor?.APELLIDOS %>
+                </td>
+                <td class="px-4 py-2 border"><%= c.CURSACION %></td>
+                <td class="px-4 py-2 border">
+                  <span class="px-2 py-1 rounded text-white <%= c.ESTATUS ? 'bg-green-500' : 'bg-red-500' %>">
+                    <%= c.ESTATUS ? 'Activo' : 'Inactivo' %>
+                  </span>
+                </td>
+                <td class="px-4 py-2 border space-x-2">
+                  <% if (c.ESTATUS) { %>
+                    <a href="/cronogramas/editar/<%= c.ID_CRONOGRAMA %>" class="text-blue-600 hover:underline">
+                      <i class="fas fa-edit"></i>
+                    </a>
+                    <form action="/cronogramas/eliminar/<%= c.ID_CRONOGRAMA %>" method="POST" class="inline">
+                      <button type="submit" class="text-red-600 hover:underline">
+                        <i class="fas fa-trash-alt"></i>
+                      </button>
+                    </form>
+                  <% } else { %>
+                    <button onclick="reactivar(<%= c.ID_CRONOGRAMA %>)" class="text-green-600 hover:underline">
+                      <i class="fas fa-redo-alt"></i> Reactivar
+                    </button>
+                  <% } %>
+                </td>
+              </tr>
+            <% }) %>
+          <% } %>
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+
+<script>
+  async function reactivar(id) {
+    if (confirm('¿Deseas reactivar este cronograma?')) {
+      const res = await fetch(`/cronogramas/reactivar/${id}`, { method: 'POST' });
+      const data = await res.json();
+      if (data.ok) location.reload();
+      else alert('Error al reactivar.');
+    }
+  }
+</script>

@@ -30,14 +30,25 @@
             <tr class="border-t text-gray-800 hover:bg-gray-50">
               <td class="px-4 py-2 border"><%= asistencia.ID_ASISTENCIA %></td>
               <td class="px-4 py-2 border"><%= asistencia.FECHA %></td>
-              <td class="px-4 py-2 border">#<%= asistencia.ID_MATRICULA %></td>
+              <td class="px-4 py-2 border">
+                <% const m = asistencia.cronograma?.matricula; %>
+                <% if (m?.estudiante) { %>
+                  <%= m.ID_MATRICULA %> - <%= m.estudiante.NOMBRES %> <%= m.estudiante.APELLIDOS %>
+                <% } else { %>
+                  N/A
+                <% } %>
+              </td>
               <td class="px-4 py-2 border"><%= asistencia.profesor?.NOMBRES %> <%= asistencia.profesor?.APELLIDOS %></td>
               <td class="px-4 py-2 border"><%= asistencia.curso?.NOMBRE || 'N/A' %></td>
               <td class="px-4 py-2 border">
                 <% if (asistencia.ESTADO === 'A') { %>
                   <span class="text-green-600 font-semibold">Asistió</span>
-                <% } else { %>
+                <% } else if (asistencia.ESTADO === 'T') { %>
+                  <span class="text-yellow-600 font-semibold">Tardanza</span>
+                <% } else if (asistencia.ESTADO === 'F') { %>
                   <span class="text-red-600 font-semibold">Faltó</span>
+                <% } else { %>
+                  <span class="text-gray-500">Desconocido</span>
                 <% } %>
               </td>
               <td class="py-2 px-4 border">

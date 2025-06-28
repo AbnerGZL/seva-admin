@@ -21,8 +21,8 @@
             <th class="px-4 py-2 text-left">Apellidos</th>
             <th class="px-4 py-2 text-left">Especialidad</th>
             <th class="px-4 py-2 text-left">Email</th>
-            <th class="px-4 py-2 text-left">Teléfono</th>
             <th class="px-4 py-2 text-left">DNI</th>
+            <th class="px-4 py-2 text-left">Estado</th>
             <th class="px-4 py-2 text-left">Estatus</th>
             <th class="px-4 py-2 text-center">Acciones</th>
           </tr>
@@ -36,8 +36,8 @@
                 <td class="px-4 py-2"><%= profesor.APELLIDOS %></td>
                 <td class="px-4 py-2"><%= profesor.ESPECIALIDAD %></td>
                 <td class="px-4 py-2"><%= profesor.CORREO %></td>
-                <td class="px-4 py-2"><%= profesor.TELEFONO %></td>
                 <td class="px-4 py-2"><%= profesor.DNI %></td>
+                <td class="px-4 py-2"><%= profesor.ESTADO %></td>
                 <td class="px-4 py-2">
                   <% if (profesor.ESTATUS) { %>
                     <span class="text-green-600 font-semibold">Activo</span>
@@ -56,7 +56,7 @@
                     </button>
                   <% } %>
 
-                  <form action="/profesores/eliminar/<%= profesor.ID_PROFESOR %>" method="POST" class="inline">
+                  <form action="/profesores/eliminar/<%= profesor.ID_PROFESOR %>" method="POST" class="inline" onsubmit="return confirm('¿Estás seguro de eliminar este profesor?');">
                     <button type="submit" class="text-red-600 hover:text-red-800" title="Eliminar">
                       <i class="fas fa-trash-alt"></i>
                     </button>

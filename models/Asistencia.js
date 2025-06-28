@@ -7,9 +7,9 @@ const Asistencia = sequelize.define('Asistencia', {
     primaryKey: true,
     autoIncrement: true,
   },
-  ID_MATRICULA: {
+  ID_CRONOGRAMA: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: false
   },
   ID_PROFESOR: {
     type: DataTypes.INTEGER,
@@ -25,23 +25,17 @@ const Asistencia = sequelize.define('Asistencia', {
   },
   ESTADO: {
     type: DataTypes.STRING(1),
-    allowNull: false,
+    allowNull: true
   },
   ESTATUS: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  FECHA_CREACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  FECHA_MODIFICACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
+    defaultValue: true,
+  }
 }, {
   tableName: 'ASISTENCIAS',
-  timestamps: false,
+  timestamps: true,
+  createdAt: 'FECHA_CREACION',
+  updatedAt: 'FECHA_ACTUALIZACION'
 });
 
 module.exports = Asistencia;

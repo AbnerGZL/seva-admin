@@ -31,7 +31,10 @@
         <select name="ID_NOTA" id="ID_NOTA" required class="w-full px-3 py-2 border border-gray-300 rounded" <%= notas.length === 0 ? 'disabled' : '' %>>
           <% notas.forEach(nota => { %>
             <option value="<%= nota.ID_NOTA %>" <%= formData?.ID_NOTA == nota.ID_NOTA ? 'selected' : '' %>>
-              Nota #<%= nota.ID_NOTA %>
+              <%= nota.cronograma?.matricula?.estudiante?.NOMBRES %> <%= nota.cronograma?.matricula?.estudiante?.APELLIDOS %> -
+              <%= nota.cronograma?.curso?.NOMBRE %> -
+              Ciclo <%= nota.cronograma?.matricula?.CICLO %> -
+              Práctica: <%= nota.PROMEDIOP %> / Teoría: <%= nota.PROMEDIOT %>
             </option>
           <% }) %>
         </select>

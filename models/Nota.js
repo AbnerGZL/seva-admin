@@ -7,41 +7,35 @@ const Nota = sequelize.define('Nota', {
     primaryKey: true,
     autoIncrement: true,
   },
-  ID_MATRICULA: {
+  ID_CRONOGRAMA: {
     type: DataTypes.INTEGER,
-    allowNull: false,
+    allowNull: false
   },
   ID_CURSO: {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
   PROMEDIOP: {
-    type: DataTypes.DECIMAL(10, 2),
+    type: DataTypes.DECIMAL(5, 2),
     allowNull: false,
   },
   PROMEDIOT: {
-    type: DataTypes.DECIMAL(10, 2),
+    type: DataTypes.DECIMAL(5, 2),
     allowNull: false,
   },
   UNIDAD: {
-    type: DataTypes.STRING(20),
+    type: DataTypes.STRING(45),
     allowNull: false,
   },
   ESTATUS: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  FECHA_CREACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  FECHA_MODIFICACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
+    allowNull: false
+  }
 }, {
   tableName: 'NOTAS',
-  timestamps: false,
+  timestamps: true,
+  createdAt: 'FECHA_CREACION',
+  updatedAt: 'FECHA_ACTUALIZACION'
 });
 
 module.exports = Nota;

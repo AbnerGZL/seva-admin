@@ -27,7 +27,6 @@ module.exports = {
           ]
         }]
       });
-
       res.render('pagos/listar', { pagos });
     } catch (error) {
       console.error(error);
@@ -60,19 +59,25 @@ module.exports = {
   },
 
   crear: async (req, res) => {
+    const { ID_MATRICULA, FECHA_PAGO, MONTO, FORMATO, OBSERVACION } = req.body;
+
     try {
+      if (!ID_MATRICULA || !FECHA_PAGO || !MONTO) {
+        throw new Error('Matrícula, fecha de pago y monto son obligatorios.');
+      }
+
       const codigoRecibo = await generarCodigoReciboUnico();
 
       await Pago.create({
-        ID_MATRICULA: req.body.ID_MATRICULA,
-        FECHA_PAGO: req.body.FECHA_PAGO,
-        MONTO: req.body.MONTO,
-        FORMATO: req.body.FORMATO,
+        ID_MATRICULA,
+        FECHA_PAGO,
+        MONTO,
+        FORMATO,
         RECIBO: codigoRecibo,
-        OBSERVACION: req.body.OBSERVACION,
+        OBSERVACION,
         ESTATUS: true,
         FECHA_CREACION: new Date(),
-        FECHA_MODIFICACION: new Date()
+        FECHA_ACTUALIZACION: new Date()
       });
 
       res.redirect('/pagos');
@@ -97,7 +102,7 @@ module.exports = {
       res.render('pagos/crear', {
         matriculas,
         formData: req.body,
-        error: 'Error al crear pago'
+        error: error.message || 'Error al crear pago'
       });
     }
   },
@@ -138,14 +143,16 @@ module.exports = {
   },
 
   editar: async (req, res) => {
+    const { ID_MATRICULA, FECHA_PAGO, MONTO, FORMATO, OBSERVACION } = req.body;
+
     try {
       await Pago.update({
-        ID_MATRICULA: req.body.ID_MATRICULA,
-        FECHA_PAGO: req.body.FECHA_PAGO,
-        MONTO: req.body.MONTO,
-        FORMATO: req.body.FORMATO,
-        OBSERVACION: req.body.OBSERVACION,
-        FECHA_MODIFICACION: new Date()
+        ID_MATRICULA,
+        FECHA_PAGO,
+        MONTO,
+        FORMATO,
+        OBSERVACION,
+        FECHA_ACTUALIZACION: new Date()
       }, {
         where: { ID_PAGO: req.params.id }
       });
@@ -182,7 +189,7 @@ module.exports = {
     try {
       await Pago.update({
         ESTATUS: true,
-        FECHA_MODIFICACION: new Date()
+        FECHA_ACTUALIZACION: new Date()
       }, {
         where: { ID_PAGO: req.params.id }
       });
@@ -190,7 +197,7 @@ module.exports = {
       res.json({ ok: true });
     } catch (error) {
       console.error(error);
-      res.json({ ok: false });
+      res.status(500).json({ ok: false, message: 'Error al reactivar pago' });
     }
   },
 
@@ -198,7 +205,7 @@ module.exports = {
     try {
       await Pago.update({
         ESTATUS: false,
-        FECHA_MODIFICACION: new Date()
+        FECHA_ACTUALIZACION: new Date()
       }, {
         where: { ID_PAGO: req.params.id }
       });

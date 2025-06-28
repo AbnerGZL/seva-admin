@@ -14,6 +14,7 @@ const Curso = sequelize.define('Curso', {
   CODIGOCU: {
     type: DataTypes.STRING(5),
     allowNull: false,
+    unique: true
   },
   NOMBRE: {
     type: DataTypes.STRING(45),
@@ -37,19 +38,13 @@ const Curso = sequelize.define('Curso', {
   },
   ESTATUS: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  FECHA_CREACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  FECHA_MODIFICACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
+    defaultValue: true
+  }
 }, {
   tableName: 'CURSOS',
-  timestamps: false,
+  timestamps: true,
+  createdAt: 'FECHA_CREACION',
+  updatedAt: 'FECHA_ACTUALIZACION'
 });
 
 module.exports = Curso;

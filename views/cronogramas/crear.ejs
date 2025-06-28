@@ -1,0 +1,98 @@
+<%- include('../partials/header', { title: 'Registrar Cronograma' }) %>
+<%- include('../partials/navbar') %>
+
+<div class="max-w-3xl mx-auto py-8">
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">
+      <i class="fas fa-calendar-plus text-blue-600 mr-2"></i> Registrar Cronograma
+    </h1>
+
+    <% if (error) { %>
+      <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <% if (matriculas.length === 0 || cursos.length === 0 || profesores.length === 0) { %>
+      <div class="bg-yellow-100 border border-yellow-400 text-yellow-800 px-4 py-3 rounded mb-6">
+        Faltan datos necesarios para registrar un cronograma.
+      </div>
+
+      <div class="flex flex-wrap gap-2 mb-6">
+        <% if (matriculas.length === 0) { %>
+          <a href="/matriculas/crear" class="bg-gray-600 hover:bg-gray-700 text-white px-4 py-2 rounded transition">
+            Crear Matrícula
+          </a>
+        <% } %>
+        <% if (cursos.length === 0) { %>
+          <a href="/cursos/crear" class="bg-purple-600 hover:bg-purple-700 text-white px-4 py-2 rounded transition">
+            Crear Curso
+          </a>
+        <% } %>
+        <% if (profesores.length === 0) { %>
+          <a href="/profesores/crear" class="bg-yellow-600 hover:bg-yellow-700 text-white px-4 py-2 rounded transition">
+            Crear Profesor
+          </a>
+        <% } %>
+      </div>
+    <% } %>
+
+    <form action="/cronogramas/crear" method="POST"
+      <%= (matriculas.length === 0 || cursos.length === 0 || profesores.length === 0) ? 'style="pointer-events: none; opacity: 0.5;"' : '' %>
+      class="space-y-4">
+
+      <!-- Matrícula -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Matrícula</label>
+        <select name="ID_MATRICULA" class="w-full border rounded px-3 py-2" required>
+          <% matriculas.forEach(m => { %>
+            <option value="<%= m.ID_MATRICULA %>" <%= formData?.ID_MATRICULA == m.ID_MATRICULA ? 'selected' : '' %>>
+              <%= m.estudiante?.NOMBRES %> <%= m.estudiante?.APELLIDOS %> - <%= m.carrera?.NOMBRE %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <!-- Curso -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Curso</label>
+        <select name="ID_CURSO" class="w-full border rounded px-3 py-2" required>
+          <% cursos.forEach(curso => { %>
+            <option value="<%= curso.ID_CURSO %>" <%= formData?.ID_CURSO == curso.ID_CURSO ? 'selected' : '' %>>
+              <%= curso.NOMBRE %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <!-- Profesor -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Profesor</label>
+        <select name="ID_PROFESOR" class="w-full border rounded px-3 py-2" required>
+          <% profesores.forEach(p => { %>
+            <option value="<%= p.ID_PROFESOR %>" <%= formData?.ID_PROFESOR == p.ID_PROFESOR ? 'selected' : '' %>>
+              <%= p.NOMBRES %> <%= p.APELLIDOS %> - <%= p.usuario?.EMAIL %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <!-- Cursación -->
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Cursación</label>
+        <input type="text" name="CURSACION" value="<%= formData?.CURSACION || '' %>" 
+          class="w-full border rounded px-3 py-2" required>
+      </div>
+
+      <!-- Botón Guardar -->
+      <div class="flex justify-end pt-4">
+        <a href="/cronogramas" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+          Cancelar
+        </a>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

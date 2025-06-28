@@ -23,7 +23,7 @@ const Matricula = sequelize.define('Matricula', {
     type: DataTypes.STRING(45),
     allowNull: false,
   },
-  PERIODOA: {
+  PERIODO: {
     type: DataTypes.STRING(45),
     allowNull: false,
   },
@@ -32,24 +32,18 @@ const Matricula = sequelize.define('Matricula', {
     allowNull: false,
   },
   CONDICION: {
-    type: DataTypes.STRING(20),
+    type: DataTypes.STRING(45),
     allowNull: true,
   },
   ESTATUS: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  FECHA_CREACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  FECHA_MODIFICACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
+    defaultValue: true
+  }
 }, {
   tableName: 'MATRICULAS',
-  timestamps: false,
+  timestamps: true,
+  createdAt: 'FECHA_CREACION',
+  updatedAt: 'FECHA_ACTUALIZACION'
 });
 
 module.exports = Matricula;

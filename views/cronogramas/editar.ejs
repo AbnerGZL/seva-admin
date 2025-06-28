@@ -1,0 +1,66 @@
+<%- include('../partials/header', { title: 'Editar Cronograma' }) %>
+<%- include('../partials/navbar') %>
+
+<div class="max-w-3xl mx-auto py-8">
+  <div class="bg-white p-6 rounded-lg shadow">
+    <h1 class="text-2xl font-bold mb-6 text-gray-800">
+      <i class="fas fa-edit text-yellow-500 mr-2"></i> Editar Cronograma
+    </h1>
+
+    <% if (error) { %>
+      <div class="bg-red-100 text-red-700 p-3 rounded mb-4">
+        <%= error %>
+      </div>
+    <% } %>
+
+    <form action="/cronogramas/editar/<%= cronograma.id %>" method="POST" class="space-y-4">
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Matrícula</label>
+        <select name="ID_MATRICULA" class="w-full border rounded px-3 py-2">
+          <% matriculas.forEach(m => { %>
+            <option value="<%= m.ID_MATRICULA %>" <%= cronograma.ID_MATRICULA == m.ID_MATRICULA ? 'selected' : '' %>>
+              <%= m.ID_MATRICULA %> - <%= m.ESTADO %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Curso</label>
+        <select name="ID_CURSO" class="w-full border rounded px-3 py-2">
+          <% cursos.forEach(curso => { %>
+            <option value="<%= curso.ID_CURSO %>" <%= cronograma.ID_CURSO == curso.ID_CURSO ? 'selected' : '' %>>
+              <%= curso.NOMBRE %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Profesor</label>
+        <select name="ID_PROFESOR" class="w-full border rounded px-3 py-2">
+          <% profesores.forEach(p => { %>
+            <option value="<%= p.ID_PROFESOR %>" <%= cronograma.ID_PROFESOR == p.ID_PROFESOR ? 'selected' : '' %>>
+              <%= p.NOMBRES %> <%= p.APELLIDOS %> - <%= p.usuario?.EMAIL %>
+            </option>
+          <% }) %>
+        </select>
+      </div>
+
+      <div>
+        <label class="block text-sm font-medium text-gray-700">Cursación</label>
+        <input type="text" name="CURSACION" value="<%= cronograma.CURSACION %>" class="w-full border rounded px-3 py-2" required>
+      </div>
+
+      <div class="flex justify-end pt-4">
+        <a href="/cronogramas" class="bg-gray-500 hover:bg-gray-600 text-white px-4 py-2 rounded">
+          Cancelar
+        </a>
+        <button type="submit" class="bg-blue-600 text-white px-4 py-2 rounded hover:bg-blue-700">
+          Guardar
+        </button>
+      </div>
+    </form>
+  </div>
+</div>

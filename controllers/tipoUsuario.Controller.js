@@ -18,12 +18,28 @@ module.exports = {
   crear: async (req, res) => {
     const { NOMBRE } = req.body;
     try {
+      if (!NOMBRE || NOMBRE.trim() === '') {
+        return res.render('tipos/crear', {
+          formData: req.body,
+          error: 'El nombre es obligatorio'
+        });
+      }
+
+      const existente = await TipoUsuario.findOne({ where: { NOMBRE } });
+      if (existente) {
+        return res.render('tipos/crear', {
+          formData: req.body,
+          error: 'Ya existe un tipo de usuario con ese nombre.'
+        });
+      }
+
       await TipoUsuario.create({
         NOMBRE,
         ESTATUS: true,
         FECHA_CREACION: new Date(),
         FECHA_MODIFICACION: new Date()
       });
+
       res.redirect('/tipos');
     } catch (error) {
       console.error('Error al crear tipo de usuario:', error);
@@ -35,6 +51,10 @@ module.exports = {
     const { id } = req.params;
     try {
       const tipo = await TipoUsuario.findByPk(id);
+      if (!tipo) {
+        return res.render('error', { mensaje: 'Tipo de usuario no encontrado' });
+      }
+
       res.render('tipos/editar', { tipo, error: null });
     } catch (error) {
       console.error(error);
@@ -45,7 +65,28 @@ module.exports = {
   editar: async (req, res) => {
     const { id } = req.params;
     const { NOMBRE } = req.body;
+
     try {
+      if (!NOMBRE || NOMBRE.trim() === '') {
+        const tipo = await TipoUsuario.findByPk(id);
+        return res.render('tipos/editar', {
+          tipo,
+          error: 'El nombre es obligatorio'
+        });
+      }
+
+      const existente = await TipoUsuario.findOne({
+        where: { NOMBRE }
+      });
+
+      if (existente && existente.ID_TIPO != id) {
+        const tipo = await TipoUsuario.findByPk(id);
+        return res.render('tipos/editar', {
+          tipo,
+          error: 'Ya existe otro tipo de usuario con ese nombre.'
+        });
+      }
+
       await TipoUsuario.update(
         {
           NOMBRE,
@@ -53,6 +94,7 @@ module.exports = {
         },
         { where: { ID_TIPO: id } }
       );
+
       res.redirect('/tipos');
     } catch (error) {
       console.error('Error al editar tipo:', error);

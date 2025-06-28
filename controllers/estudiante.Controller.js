@@ -8,7 +8,7 @@ module.exports = {
           {
             model: Usuario,
             as: 'usuario',
-            where: { ESTATUS: 1 },
+            where: { ESTATUS: true },
             include: [{ model: TipoUsuario, as: 'tipo' }]
           }
         ]
@@ -23,27 +23,18 @@ module.exports = {
   crearForm: async (req, res) => {
     try {
       const todos = await Usuario.findAll({
-        where: { ESTATUS: 1 },
+        where: { ESTATUS: true },
         include: [
           {
             model: TipoUsuario,
             as: 'tipo',
             where: { NOMBRE: 'Estudiante' }
           },
-          {
-            model: Profesor,
-            as: 'profesor',
-            required: false
-          },
-          {
-            model: Estudiante,
-            as: 'estudiante',
-            required: false
-          }
+          { model: Profesor, as: 'profesor', required: false },
+          { model: Estudiante, as: 'estudiante', required: false }
         ]
       });
 
-      // Solo usuarios tipo 'Estudiante' que no están asociados a Profesor ni Estudiante
       const usuarios = todos.filter(usuario => !usuario.profesor && !usuario.estudiante);
       const carreras = await Carrera.findAll();
 
@@ -60,7 +51,10 @@ module.exports = {
   },
 
   crear: async (req, res) => {
-    const { ID_USUARIO, NOMBRES, APELLIDOS, DNI, CARRERA, CORREO, ESTADO } = req.body;
+    const {
+      ID_USUARIO, NOMBRES, APELLIDOS, DNI, CARRERA,
+      CORREO, ESTADO, FECHA_NAC, SEXO, DIRECCION, TELEFONO
+    } = req.body;
 
     try {
       const usuario = await Usuario.findByPk(ID_USUARIO, {
@@ -70,7 +64,6 @@ module.exports = {
       if (usuario.profesor) {
         throw new Error('Este usuario ya está registrado como profesor');
       }
-
       if (usuario.estudiante) {
         throw new Error('Este usuario ya está registrado como estudiante');
       }
@@ -83,9 +76,13 @@ module.exports = {
         CARRERA,
         CORREO,
         ESTADO,
+        FECHA_NAC,
+        SEXO,
+        DIRECCION,
+        TELEFONO,
         ESTATUS: true,
         FECHA_CREACION: new Date(),
-        FECHA_MODIFICACION: new Date()
+        FECHA_ACTUALIZACION: new Date()
       });
 
       res.redirect('/estudiantes');
@@ -93,26 +90,13 @@ module.exports = {
       console.error('Error al crear estudiante:', error.message);
       const carreras = await Carrera.findAll();
       const todos = await Usuario.findAll({
-        where: { ESTATUS: 1 },
+        where: { ESTATUS: true },
         include: [
-          {
-            model: TipoUsuario,
-            as: 'tipo',
-            where: { NOMBRE: 'Estudiante' }
-          },
-          {
-            model: Profesor,
-            as: 'profesor',
-            required: false
-          },
-          {
-            model: Estudiante,
-            as: 'estudiante',
-            required: false
-          }
+          { model: TipoUsuario, as: 'tipo', where: { NOMBRE: 'Estudiante' } },
+          { model: Profesor, as: 'profesor', required: false },
+          { model: Estudiante, as: 'estudiante', required: false }
         ]
       });
-
       const usuarios = todos.filter(usuario => !usuario.profesor && !usuario.estudiante);
 
       res.render('estudiantes/crear', {
@@ -127,12 +111,12 @@ module.exports = {
   editarForm: async (req, res) => {
     try {
       const estudiante = await Estudiante.findByPk(req.params.id);
-      const usuarios = await Usuario.findAll({ where: { ESTATUS: 1 } });
-      const carreras = await Carrera.findAll();
-
       if (!estudiante) {
         return res.render('error', { mensaje: 'Estudiante no encontrado' });
       }
+
+      const usuarios = await Usuario.findAll({ where: { ESTATUS: true } });
+      const carreras = await Carrera.findAll();
 
       res.render('estudiantes/editar', {
         estudiante,
@@ -142,12 +126,15 @@ module.exports = {
       });
     } catch (error) {
       console.error(error);
-      res.render('error', { mensaje: 'Error al cargar el formulario' });
+      res.render('error', { mensaje: 'Error al cargar el formulario de edición' });
     }
   },
 
   editar: async (req, res) => {
-    const { ID_USUARIO, NOMBRES, APELLIDOS, DNI, CARRERA, CORREO, ESTADO } = req.body;
+    const {
+      ID_USUARIO, NOMBRES, APELLIDOS, DNI, CARRERA,
+      CORREO, ESTADO, FECHA_NAC, SEXO, DIRECCION, TELEFONO
+    } = req.body;
 
     try {
       await Estudiante.update(
@@ -159,7 +146,11 @@ module.exports = {
           CARRERA,
           CORREO,
           ESTADO,
-          FECHA_MODIFICACION: new Date()
+          FECHA_NAC,
+          SEXO,
+          DIRECCION,
+          TELEFONO,
+          FECHA_ACTUALIZACION: new Date()
         },
         { where: { ID_ESTUDIANTE: req.params.id } }
       );
@@ -168,7 +159,7 @@ module.exports = {
     } catch (error) {
       console.error(error);
       const estudiante = await Estudiante.findByPk(req.params.id);
-      const usuarios = await Usuario.findAll({ where: { ESTATUS: 1 } });
+      const usuarios = await Usuario.findAll({ where: { ESTATUS: true } });
       const carreras = await Carrera.findAll();
 
       res.render('estudiantes/editar', {
@@ -183,7 +174,7 @@ module.exports = {
   eliminar: async (req, res) => {
     try {
       await Estudiante.update(
-        { ESTATUS: false, FECHA_MODIFICACION: new Date() },
+        { ESTATUS: false, FECHA_ACTUALIZACION: new Date() },
         { where: { ID_ESTUDIANTE: req.params.id } }
       );
       res.redirect('/estudiantes');
@@ -196,7 +187,7 @@ module.exports = {
   reactivar: async (req, res) => {
     try {
       await Estudiante.update(
-        { ESTATUS: true, FECHA_MODIFICACION: new Date() },
+        { ESTATUS: true, FECHA_ACTUALIZACION: new Date() },
         { where: { ID_ESTUDIANTE: req.params.id } }
       );
       res.json({ ok: true });
@@ -205,5 +196,4 @@ module.exports = {
       res.json({ ok: false });
     }
   }
-
 };

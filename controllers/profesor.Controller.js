@@ -43,7 +43,7 @@ module.exports = {
   },
 
   crear: async (req, res) => {
-    const { ID_USUARIO, NOMBRES, APELLIDOS, DNI, ESPECIALIDAD, TELEFONO } = req.body;
+    const { ID_USUARIO, NOMBRES, APELLIDOS, DNI, ESPECIALIDAD, ESTADO } = req.body;
 
     try {
       const usuario = await Usuario.findByPk(ID_USUARIO, {
@@ -59,12 +59,12 @@ module.exports = {
         NOMBRES,
         APELLIDOS,
         ESPECIALIDAD,
-        TELEFONO,
         DNI,
         CORREO: usuario.EMAIL,
         ESTATUS: true,
+        ESTADO,
         FECHA_CREACION: new Date(),
-        FECHA_MODIFICACION: new Date()
+        FECHA_ACTUALIZACION: new Date()
       });
 
       res.redirect('/profesores');
@@ -110,17 +110,17 @@ module.exports = {
   },
 
   editar: async (req, res) => {
-    const { NOMBRES, APELLIDOS, DNI, ESPECIALIDAD, TELEFONO, CORREO } = req.body;
+    const { NOMBRES, APELLIDOS, DNI, ESPECIALIDAD, CORREO, ESTADO } = req.body;
 
     try {
       await Profesor.update({
         NOMBRES,
         APELLIDOS,
         ESPECIALIDAD,
-        TELEFONO,
         DNI,
         CORREO,
-        FECHA_MODIFICACION: new Date()
+        ESTADO,
+        FECHA_ACTUALIZACION: new Date()
       }, {
         where: { ID_PROFESOR: req.params.id }
       });
@@ -140,7 +140,8 @@ module.exports = {
     try {
       await Profesor.update({
         ESTATUS: false,
-        FECHA_MODIFICACION: new Date()
+        ESTADO: 'Inactivo',
+        FECHA_ACTUALIZACION: new Date()
       }, {
         where: { ID_PROFESOR: req.params.id }
       });
@@ -162,7 +163,11 @@ module.exports = {
       }
 
       await Profesor.update(
-        { ESTATUS: true, FECHA_MODIFICACION: new Date() },
+        {
+          ESTATUS: true,
+          ESTADO: 'Activo',
+          FECHA_ACTUALIZACION: new Date()
+        },
         { where: { ID_PROFESOR: id } }
       );
 

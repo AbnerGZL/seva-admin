@@ -5,8 +5,7 @@ const Profesor = sequelize.define('Profesor', {
   ID_PROFESOR: {
     type: DataTypes.INTEGER,
     autoIncrement: true,
-    primaryKey: true,
-    allowNull: false,
+    primaryKey: true
   },
   ID_USUARIO: {
     type: DataTypes.INTEGER,
@@ -28,9 +27,9 @@ const Profesor = sequelize.define('Profesor', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  TELEFONO: {
+  ESTADO: {
     type: DataTypes.STRING(45),
-    allowNull: false,
+    allowNull: false
   },
   CORREO: {
     type: DataTypes.STRING(100),
@@ -38,19 +37,13 @@ const Profesor = sequelize.define('Profesor', {
   },
   ESTATUS: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  FECHA_CREACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  FECHA_MODIFICACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
+    defaultValue: true
+  }
 }, {
   tableName: 'PROFESOR',
-  timestamps: false,
+  timestamps: true,
+  createdAt: 'FECHA_CREACION',
+  updatedAt: 'FECHA_ACTUALIZACION'
 });
 
 module.exports = Profesor;

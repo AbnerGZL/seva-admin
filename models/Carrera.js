@@ -14,6 +14,7 @@ const Carrera = sequelize.define('Carrera', {
   CODIGOCA: {
     type: DataTypes.STRING(45),
     allowNull: false,
+    unique: true
   },
   DESCRIPCION: {
     type: DataTypes.STRING(200),
@@ -28,7 +29,7 @@ const Carrera = sequelize.define('Carrera', {
     allowNull: false,
   },
   TITULO: {
-    type: DataTypes.STRING(60),
+    type: DataTypes.STRING(50),
     allowNull: false,
   },
   GRADO: {
@@ -45,19 +46,13 @@ const Carrera = sequelize.define('Carrera', {
   },
   ESTATUS: {
     type: DataTypes.BOOLEAN,
-    allowNull: false,
-  },
-  FECHA_CREACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
-  FECHA_MODIFICACION: {
-    type: DataTypes.DATE,
-    allowNull: false,
-  },
+    defaultValue: true
+  }
 }, {
   tableName: 'CARRERAS',
-  timestamps: false,
+  timestamps: true,
+  createdAt: 'FECHA_CREACION',
+  updatedAt: 'FECHA_ACTUALIZACION'
 });
 
 module.exports = Carrera;
