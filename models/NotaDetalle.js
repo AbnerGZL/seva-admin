@@ -1,37 +1,36 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
+module.exports = (sequelize, DataTypes) => {
+  const NOTA_DETALLE = sequelize.define('NOTA_DETALLE', {
+    ID_NOTA_DETALLE: {
+      type: DataTypes.INTEGER,
+      primaryKey: true,
+      autoIncrement: true,
+    },
+    ID_NOTA: {
+      type: DataTypes.INTEGER,
+      allowNull: false,
+    },
+    PRACTICA: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: true,
+    },
+    TEORIA: {
+      type: DataTypes.DECIMAL(5, 2),
+      allowNull: true,
+    },
+    FECHA: {
+      type: DataTypes.DATEONLY,
+      allowNull: false,
+    },
+    ESTATUS: {
+      type: DataTypes.BOOLEAN,
+      allowNull: false,
+    },
+  }, {
+    tableName: 'NOTA_DETALLE',
+    timestamps: true,
+    createdAt: 'FECHA_CREACION',
+    updatedAt: 'FECHA_ACTUALIZACION'
+  });
 
-const NotaDetalle = sequelize.define('NotaDetalle', {
-  ID_NOTA_DETALLE: {
-    type: DataTypes.INTEGER,
-    primaryKey: true,
-    autoIncrement: true,
-  },
-  ID_NOTA: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  PRACTICA: {
-    type: DataTypes.DECIMAL(5,2),
-    allowNull: false,
-  },
-  TEORIA: {
-    type: DataTypes.DECIMAL(5,2),
-    allowNull: false,
-  },
-  FECHA: {
-    type: DataTypes.DATEONLY,
-    allowNull: false,
-  },
-  ESTATUS: {
-    type: DataTypes.BOOLEAN,
-    allowNull: false
-  }
-}, {
-  tableName: 'NOTAS_DETALLE',
-  timestamps: true,
-  createdAt: 'FECHA_CREACION',
-  updatedAt: 'FECHA_ACTUALIZACION'
-});
-
-module.exports = NotaDetalle;
+  return NOTA_DETALLE;
+}

@@ -61,7 +61,7 @@ app.use("/asistencias", asistenciaRoutes);
 app.use("/notadetalle", notaDetalleRoutes);
 app.use("/cronogramas", cronogramaRoutes);
 
-db.sequelize.sync({ force: false }).then(() => {
+db.sequelize.sync({ alter:false, force: false }).then(() => {
   const PORT = process.env.PORT || 3000;
   app.listen(PORT, () => console.log(`Servidor CRUD corriendo en http://localhost:${PORT}`));
 });

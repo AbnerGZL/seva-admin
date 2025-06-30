@@ -1,5 +1,12 @@
-const { Asistencia, Cronograma, Matricula, Estudiante, Profesor, Usuario } = require('../models');
-const Curso = require('../models/Curso');
+const {
+  Asistencia,
+  Cronograma,
+  Matricula,
+  Estudiante,
+  Profesor,
+  Usuario,
+  Curso
+} = require('../models');
 
 const listar = async (req, res) => {
   try {

@@ -1,7 +1,5 @@
-const { DataTypes } = require('sequelize');
-const sequelize = require('../config/database');
-
-const Nota = sequelize.define('Nota', {
+module.exports = (sequelize, DataTypes) => {
+  const Nota = sequelize.define('NOTA', {
   ID_NOTA: {
     type: DataTypes.INTEGER,
     primaryKey: true,
@@ -9,15 +7,15 @@ const Nota = sequelize.define('Nota', {
   },
   ID_CRONOGRAMA: {
     type: DataTypes.INTEGER,
-    allowNull: false
+    allowNull: false,
   },
   PROMEDIOP: {
     type: DataTypes.DECIMAL(5, 2),
-    allowNull: false,
+    allowNull: true,
   },
   PROMEDIOT: {
     type: DataTypes.DECIMAL(5, 2),
-    allowNull: false,
+    allowNull: true,
   },
   UNIDAD: {
     type: DataTypes.STRING(45),
@@ -25,13 +23,14 @@ const Nota = sequelize.define('Nota', {
   },
   ESTATUS: {
     type: DataTypes.BOOLEAN,
-    allowNull: false
-  }
+    allowNull: false,
+  },
 }, {
-  tableName: 'NOTAS',
-  timestamps: true,
-  createdAt: 'FECHA_CREACION',
-  updatedAt: 'FECHA_ACTUALIZACION'
-});
+    tableName: 'NOTAS',
+    timestamps: true,
+    createdAt: 'FECHA_CREACION',
+    updatedAt: 'FECHA_ACTUALIZACION'
+  });
 
-module.exports = Nota;
+  return Nota;
+};

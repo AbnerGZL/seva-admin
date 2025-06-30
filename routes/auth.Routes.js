@@ -20,7 +20,7 @@ router.post('/login', async (req, res) => {
       return res.render('login', { error: 'Credenciales incorrectas' });
     }
 
-    if (usuario.tipo.NOMBRE !== 'Admin') {
+    if (usuario.tipo.NOMBRE !== 'ADMIN') {
       return res.render('login', { error: 'Solo administradores pueden iniciar sesión' });
     }
 

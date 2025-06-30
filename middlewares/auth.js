@@ -6,7 +6,7 @@ module.exports = {
     next();
   },
   adminMiddleware: (req, res, next) => {
-    if (req.session.usuario?.tipo !== 'Admin') {
+    if (req.session.usuario?.tipo !== 'ADMIN') {
       return res.render('error', { mensaje: 'Acceso no autorizado' });
     }
     next();

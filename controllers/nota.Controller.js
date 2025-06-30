@@ -1,4 +1,4 @@
-const { Nota, Cronograma, Estudiante, Carrera, Profesor, Matricula } = require('../models');
+const { Nota, Cronograma, Estudiante, Carrera, Profesor, Matricula, Curso } = require('../models');
 const { actualizarPromedios } = require('./notaDetalle.Controller');
 const { actualizarEstadoFinal } = require('./cronograma.Controller');
 
@@ -20,7 +20,7 @@ module.exports = {
                 ]
               },
               { model: Profesor, as: 'profesor' },
-              { model: require('../models/Curso'), as: 'curso' }
+              { model: Curso, as: 'curso' }
             ]
           }
         ]
@@ -50,7 +50,7 @@ module.exports = {
               { model: Carrera, as: 'carrera' }
             ]
           },
-          { model: require('../models/Curso'), as: 'curso' },
+          { model: Curso, as: 'curso' },
           { model: Profesor, as: 'profesor' }
         ]
       });
@@ -100,7 +100,7 @@ module.exports = {
               { model: Carrera, as: 'carrera' }
             ]
           },
-          { model: require('../models/Curso'), as: 'curso' },
+          { model: Curso, as: 'curso' },
           { model: Profesor, as: 'profesor' }
         ]
       });
@@ -127,7 +127,7 @@ module.exports = {
               { model: Carrera, as: 'carrera' }
             ]
           },
-          { model: require('../models/Curso'), as: 'curso' },
+          { model: Curso, as: 'curso' },
           { model: Profesor, as: 'profesor' }
         ]
       });
@@ -172,7 +172,7 @@ module.exports = {
               { model: Carrera, as: 'carrera' }
             ]
           },
-          { model: require('../models/Curso'), as: 'curso' },
+          { model: Curso, as: 'curso' },
           { model: Profesor, as: 'profesor' }
         ]
       });
