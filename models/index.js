@@ -133,16 +133,6 @@ Asistencia.belongsTo(Matricula, {
   as: 'matricula',
 });
 
-Asistencia.belongsTo(Profesor, {
-  foreignKey: 'ID_PROFESOR',
-  as: 'profesor',
-});
-
-Asistencia.belongsTo(Curso, {
-  foreignKey: 'ID_CURSO',
-  as: 'curso',
-});
-
 Asistencia.belongsTo(Cronograma, {
   foreignKey: 'ID_CRONOGRAMA',
   as: 'cronograma',

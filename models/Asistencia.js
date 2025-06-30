@@ -11,14 +11,6 @@ const Asistencia = sequelize.define('Asistencia', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  ID_PROFESOR: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
-  ID_CURSO: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
   FECHA: {
     type: DataTypes.DATEONLY,
     allowNull: false,

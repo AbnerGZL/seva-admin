@@ -1,225 +1,282 @@
-const { NotaDetalle, Nota, Cronograma, Matricula, Estudiante, Carrera, Curso } = require('../models');
+const { NotaDetalle, Nota } = require('../models');
+const { actualizarEstadoFinal } = require('./cronograma.Controller'); // Importar la función
 
-const listar = async (req, res) => {
-  try {
-    const notaDetalles = await NotaDetalle.findAll({
-      include: [{ model: Nota, as: 'nota' }]
-    });
-    res.render('notaDetalle/listar', { notaDetalles });
-  } catch (error) {
-    console.error(error);
-    res.render('error', { mensaje: 'Error al listar los detalles de nota' });
-  }
-};
+// Actualiza los promedios en NOTA y el estado final en CRONOGRAMA
+async function actualizarPromedios(idNota) {
+  const detalles = await NotaDetalle.findAll({
+    where: { ID_NOTA: idNota, ESTATUS: true }
+  });
 
-const mostrarFormularioCrear = async (req, res) => {
-  try {
-    const notas = await Nota.findAll({
-      where: { ESTATUS: true },
-      include: [
-        {
-          model: Cronograma,
-          as: 'cronograma',
-          include: [
-            {
-              model: Matricula,
-              as: 'matricula',
-              include: [
-                { model: Estudiante, as: 'estudiante' },
-                { model: Carrera, as: 'carrera' }
-              ]
-            },
-            { model: Curso, as: 'curso' }
-          ]
-        }
-      ]
-    });
+  let sumaPractica = 0;
+  let sumaTeoria = 0;
 
-    res.render('notaDetalle/crear', { notas, formData: {}, error: null });
-  } catch (error) {
-    console.error(error);
-    res.render('error', { mensaje: 'Error al cargar formulario de creación' });
-  }
-};
+  detalles.forEach(d => {
+    sumaPractica += parseFloat(d.PRACTICA);
+    sumaTeoria += parseFloat(d.TEORIA);
+  });
 
-const crear = async (req, res) => {
-  const { ID_NOTA, PRACTICA, TEORIA, FECHA } = req.body;
+  const total = detalles.length || 1; // Evita división por cero
+  const promedioP = parseFloat((sumaPractica / total).toFixed(2));
+  const promedioT = parseFloat((sumaTeoria / total).toFixed(2));
 
-  try {
-    if (!ID_NOTA || !PRACTICA || !TEORIA || !FECHA) {
-      throw new Error('Todos los campos son obligatorios');
-    }
-
-    await NotaDetalle.create({
-      ID_NOTA,
-      PRACTICA: parseFloat(PRACTICA).toFixed(2),
-      TEORIA: parseFloat(TEORIA).toFixed(2),
-      FECHA,
-      ESTATUS: true,
-      FECHA_CREACION: new Date(),
+  await Nota.update(
+    {
+      PROMEDIOP: promedioP,
+      PROMEDIOT: promedioT,
       FECHA_ACTUALIZACION: new Date()
-    });
+    },
+    { where: { ID_NOTA: idNota } }
+  );
 
-    res.redirect('/notadetalle');
-  } catch (error) {
-    console.error(error);
-
-    const notas = await Nota.findAll({
-      where: { ESTATUS: true },
-      include: [
-        {
-          model: Cronograma,
-          as: 'cronograma',
-          include: [
-            {
-              model: Matricula,
-              as: 'matricula',
-              include: [
-                { model: Estudiante, as: 'estudiante' },
-                { model: Carrera, as: 'carrera' }
-              ]
-            },
-            { model: Curso, as: 'curso' }
-          ]
-        }
-      ]
-    });
-
-    res.render('notaDetalle/crear', {
-      notas,
-      formData: req.body,
-      error: error.message || 'Error al crear el detalle de nota'
-    });
+  const nota = await Nota.findByPk(idNota);
+  if (nota) {
+    await actualizarEstadoFinal(nota.ID_CRONOGRAMA);
   }
-};
-
-const mostrarFormularioEditar = async (req, res) => {
-  try {
-    const notaDetalle = await NotaDetalle.findByPk(req.params.id);
-    const notas = await Nota.findAll({
-      where: { ESTATUS: true },
-      include: [
-        {
-          model: Cronograma,
-          as: 'cronograma',
-          include: [
-            {
-              model: Matricula,
-              as: 'matricula',
-              include: [
-                { model: Estudiante, as: 'estudiante' },
-                { model: Carrera, as: 'carrera' }
-              ]
-            },
-            { model: Curso, as: 'curso' }
-          ]
-        }
-      ]
-    });
-
-    if (!notaDetalle) {
-      return res.render('error', { mensaje: 'Detalle de nota no encontrado' });
-    }
-
-    res.render('notaDetalle/editar', { notaDetalle, notas, error: null });
-  } catch (error) {
-    console.error(error);
-    res.render('error', { mensaje: 'Error al cargar formulario de edición' });
-  }
-};
-
-const actualizar = async (req, res) => {
-  const { ID_NOTA, PRACTICA, TEORIA, FECHA } = req.body;
-
-  try {
-    if (!ID_NOTA || !PRACTICA || !TEORIA || !FECHA) {
-      throw new Error('Todos los campos son obligatorios');
-    }
-
-    await NotaDetalle.update(
-      {
-        ID_NOTA,
-        PRACTICA: parseFloat(PRACTICA).toFixed(2),
-        TEORIA: parseFloat(TEORIA).toFixed(2),
-        FECHA,
-        FECHA_ACTUALIZACION: new Date()
-      },
-      { where: { ID_NOTA_DETALLE: req.params.id } }
-    );
-
-    res.redirect('/notadetalle');
-  } catch (error) {
-    console.error(error);
-
-    const notaDetalle = await NotaDetalle.findByPk(req.params.id);
-    const notas = await Nota.findAll({
-      where: { ESTATUS: true },
-      include: [
-        {
-          model: Cronograma,
-          as: 'cronograma',
-          include: [
-            {
-              model: Matricula,
-              as: 'matricula',
-              include: [
-                { model: Estudiante, as: 'estudiante' },
-                { model: Carrera, as: 'carrera' }
-              ]
-            },
-            { model: Curso, as: 'curso' }
-          ]
-        }
-      ]
-    });
-
-    res.render('notaDetalle/editar', {
-      notaDetalle,
-      notas,
-      error: error.message || 'Error al actualizar el detalle de nota'
-    });
-  }
-};
-
-const eliminar = async (req, res) => {
-  try {
-    await NotaDetalle.update(
-      {
-        ESTATUS: false,
-        FECHA_ACTUALIZACION: new Date()
-      },
-      { where: { ID_NOTA_DETALLE: req.params.id } }
-    );
-
-    res.redirect('/notadetalle');
-  } catch (error) {
-    console.error(error);
-    res.render('error', { mensaje: 'Error al eliminar el detalle de nota' });
-  }
-};
-
-const reactivar = async (req, res) => {
-  try {
-    await NotaDetalle.update(
-      {
-        ESTATUS: true,
-        FECHA_ACTUALIZACION: new Date()
-      },
-      { where: { ID_NOTA_DETALLE: req.params.id } }
-    );
-    res.json({ ok: true });
-  } catch (error) {
-    console.error(error);
-    res.status(500).json({ ok: false });
-  }
-};
+}
 
 module.exports = {
-  listar,
-  mostrarFormularioCrear,
-  crear,
-  mostrarFormularioEditar,
-  actualizar,
-  eliminar,
-  reactivar
+  listar: async (req, res) => {
+    try {
+      const notaDetalles = await NotaDetalle.findAll({
+        include: [
+          {
+            association: 'nota',
+            include: [
+              {
+                association: 'cronograma',
+                include: [
+                  { association: 'curso' },
+                  {
+                    association: 'matricula',
+                    include: [{ association: 'estudiante' }]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      });
+      res.render('notaDetalle/listar', { notaDetalles });
+    } catch (error) {
+      console.error(error);
+      res.render('error', { mensaje: 'Error al listar los detalles de nota' });
+    }
+  },
+
+  mostrarFormularioCrear: async (req, res) => {
+    try {
+      const notas = await Nota.findAll({
+        where: { ESTATUS: true },
+        include: [
+          { association: 'detalles', where: { ESTATUS: true }, required: false },
+          {
+            association: 'cronograma',
+            include: [
+              { association: 'curso' },
+              {
+                association: 'matricula',
+                include: [{ association: 'estudiante' }]
+              }
+            ]
+          }
+        ]
+      });
+
+      const notasConDetalleCount = notas.map(n => ({
+        ...n.get({ plain: true }),
+        detalleCount: n.detalles.length
+      }));
+
+      res.render('notaDetalle/crear', { notas: notasConDetalleCount, formData: {}, error: null });
+    } catch (error) {
+      console.error(error);
+      res.render('error', { mensaje: 'Error al cargar formulario de creación' });
+    }
+  },
+
+  crear: async (req, res) => {
+    const { ID_NOTA, PRACTICA, TEORIA, FECHA } = req.body;
+
+    try {
+      const notaP = parseFloat(PRACTICA);
+      const notaT = parseFloat(TEORIA);
+
+      if (!ID_NOTA || notaP == null || notaT == null || !FECHA) {
+        throw new Error('Todos los campos son obligatorios');
+      }
+
+      if (isNaN(notaP) || isNaN(notaT) || notaP < 0 || notaP > 20 || notaT < 0 || notaT > 20) {
+        throw new Error('Las notas deben estar entre 0 y 20');
+      }
+
+      await NotaDetalle.create({
+        ID_NOTA,
+        PRACTICA: notaP.toFixed(2),
+        TEORIA: notaT.toFixed(2),
+        FECHA,
+        ESTATUS: true,
+        FECHA_CREACION: new Date(),
+        FECHA_ACTUALIZACION: new Date()
+      });
+
+      await actualizarPromedios(ID_NOTA);
+      res.redirect('/notadetalle');
+    } catch (error) {
+      console.error(error);
+
+      const notas = await Nota.findAll({
+        where: { ESTATUS: true },
+        include: [
+          { association: 'detalles', where: { ESTATUS: true }, required: false },
+          {
+            association: 'cronograma',
+            include: [
+              { association: 'curso' },
+              {
+                association: 'matricula',
+                include: [{ association: 'estudiante' }]
+              }
+            ]
+          }
+        ]
+      });
+
+      const notasConDetalleCount = notas.map(n => ({
+        ...n.get({ plain: true }),
+        detalleCount: n.detalles.length
+      }));
+
+      res.render('notaDetalle/crear', { notas: notasConDetalleCount, formData: req.body, error: error.message });
+    }
+  },
+
+  mostrarFormularioEditar: async (req, res) => {
+    try {
+      const notaDetalle = await NotaDetalle.findByPk(req.params.id);
+      const notas = await Nota.findAll({
+        where: { ESTATUS: true },
+        include: [
+          { association: 'detalles', where: { ESTATUS: true }, required: false },
+          {
+            association: 'cronograma',
+            include: [
+              { association: 'curso' },
+              {
+                association: 'matricula',
+                include: [{ association: 'estudiante' }]
+              }
+            ]
+          }
+        ]
+      });
+
+      const notasConDetalleCount = notas.map(n => ({
+        ...n.get({ plain: true }),
+        detalleCount: n.detalles.length
+      }));
+
+      if (!notaDetalle) return res.render('error', { mensaje: 'Detalle no encontrado' });
+
+      res.render('notaDetalle/editar', { notaDetalle, notas: notasConDetalleCount, error: null });
+    } catch (error) {
+      console.error(error);
+      res.render('error', { mensaje: 'Error al cargar formulario de edición' });
+    }
+  },
+
+  actualizar: async (req, res) => {
+    const { ID_NOTA, PRACTICA, TEORIA, FECHA } = req.body;
+
+    try {
+      const notaP = parseFloat(PRACTICA);
+      const notaT = parseFloat(TEORIA);
+
+      if (!ID_NOTA || notaP == null || notaT == null || !FECHA) {
+        throw new Error('Todos los campos son obligatorios');
+      }
+
+      if (isNaN(notaP) || isNaN(notaT) || notaP < 0 || notaP > 20 || notaT < 0 || notaT > 20) {
+        throw new Error('Las notas deben estar entre 0 y 20');
+      }
+
+      await NotaDetalle.update(
+        {
+          ID_NOTA,
+          PRACTICA: notaP.toFixed(2),
+          TEORIA: notaT.toFixed(2),
+          FECHA,
+          FECHA_ACTUALIZACION: new Date()
+        },
+        { where: { ID_NOTA_DETALLE: req.params.id } }
+      );
+
+      await actualizarPromedios(ID_NOTA);
+      res.redirect('/notadetalle');
+    } catch (error) {
+      console.error(error);
+
+      const notaDetalle = await NotaDetalle.findByPk(req.params.id);
+      const notas = await Nota.findAll({
+        where: { ESTATUS: true },
+        include: [
+          { association: 'detalles', where: { ESTATUS: true }, required: false },
+          {
+            association: 'cronograma',
+            include: [
+              { association: 'curso' },
+              {
+                association: 'matricula',
+                include: [{ association: 'estudiante' }]
+              }
+            ]
+          }
+        ]
+      });
+
+      const notasConDetalleCount = notas.map(n => ({
+        ...n.get({ plain: true }),
+        detalleCount: n.detalles.length
+      }));
+
+      res.render('notaDetalle/editar', { notaDetalle, notas: notasConDetalleCount, error: error.message });
+    }
+  },
+
+  eliminar: async (req, res) => {
+    try {
+      const notaDetalle = await NotaDetalle.findByPk(req.params.id);
+      if (!notaDetalle) return res.redirect('/notadetalle');
+
+      await NotaDetalle.update(
+        { ESTATUS: false, FECHA_ACTUALIZACION: new Date() },
+        { where: { ID_NOTA_DETALLE: req.params.id } }
+      );
+
+      await actualizarPromedios(notaDetalle.ID_NOTA);
+      res.redirect('/notadetalle');
+    } catch (error) {
+      console.error(error);
+      res.render('error', { mensaje: 'Error al eliminar el detalle de nota' });
+    }
+  },
+
+  reactivar: async (req, res) => {
+    try {
+      const notaDetalle = await NotaDetalle.findByPk(req.params.id);
+      if (!notaDetalle) return res.status(404).json({ ok: false });
+
+      await NotaDetalle.update(
+        { ESTATUS: true, FECHA_ACTUALIZACION: new Date() },
+        { where: { ID_NOTA_DETALLE: req.params.id } }
+      );
+
+      await actualizarPromedios(notaDetalle.ID_NOTA);
+      res.json({ ok: true });
+    } catch (error) {
+      console.error(error);
+      res.status(500).json({ ok: false });
+    }
+  },
+
+  actualizarPromedios
 };

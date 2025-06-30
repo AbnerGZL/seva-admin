@@ -1,4 +1,47 @@
-const { Matricula, Estudiante, Carrera } = require('../models');
+const { Matricula, Estudiante, Carrera, Cronograma } = require('../models');
+const { Op } = require('sequelize');
+
+async function actualizarPromedioFinalMatricula(idMatricula) {
+  try {
+    const cronogramas = await Cronograma.findAll({
+      where: {
+        ID_MATRICULA: idMatricula,
+        ESTATUS: true,
+        NOTAF: { [Op.ne]: null } // Asegura que NO sea null
+      }
+    });
+
+    // Filtrar por cronogramas que tengan NOTAF numérico y válido
+    const notasValidas = cronogramas.filter(c => !isNaN(parseFloat(c.NOTAF)));
+
+    if (notasValidas.length < 2) {
+      await Matricula.update(
+        {
+          PROMEDIOF: null,
+          CONDICION: null,
+          FECHA_ACTUALIZACION: new Date()
+        },
+        { where: { ID_MATRICULA: idMatricula } }
+      );
+      return;
+    }
+
+    const suma = notasValidas.reduce((total, c) => total + parseFloat(c.NOTAF), 0);
+    const promedio = parseFloat((suma / notasValidas.length).toFixed(2));
+    const condicion = promedio >= 13 ? 'Aprobado' : 'Desaprobado';
+
+    await Matricula.update(
+      {
+        PROMEDIOF: promedio,
+        CONDICION: condicion,
+        FECHA_ACTUALIZACION: new Date()
+      },
+      { where: { ID_MATRICULA: idMatricula } }
+    );
+  } catch (error) {
+    console.error('Error al actualizar promedio final:', error);
+  }
+}
 
 module.exports = {
   listar: async (req, res) => {
@@ -7,7 +50,7 @@ module.exports = {
         include: [
           { model: Estudiante, as: 'estudiante' },
           { model: Carrera, as: 'carrera' }
-        ],
+        ]
       });
       res.render('matriculas/listar', { matriculas });
     } catch (error) {
@@ -34,12 +77,18 @@ module.exports = {
 
   crear: async (req, res) => {
     try {
-      await Matricula.create({
+      const nuevaMatricula = await Matricula.create({
         ...req.body,
+        PROMEDIOF: 0.00,
+        CONDICION: 'Desaprobado',
         ESTATUS: true,
         FECHA_CREACION: new Date(),
         FECHA_ACTUALIZACION: new Date()
       });
+
+      // Actualizar PROMEDIOF y CONDICION después de crear, en caso ya haya cronogramas relacionados (opcional)
+      await actualizarPromedioFinalMatricula(nuevaMatricula.ID_MATRICULA);
+
       res.redirect('/matriculas');
     } catch (error) {
       console.error(error);
@@ -85,6 +134,10 @@ module.exports = {
         },
         { where: { ID_MATRICULA: req.params.id } }
       );
+
+      // Recalcular promedio y condición después de editar datos relevantes
+      await actualizarPromedioFinalMatricula(req.params.id);
+
       res.redirect('/matriculas');
     } catch (error) {
       console.error(error);
@@ -97,22 +150,6 @@ module.exports = {
         carreras,
         error: 'Error al actualizar matrícula'
       });
-    }
-  },
-
-  reactivar: async (req, res) => {
-    try {
-      await Matricula.update(
-        {
-          ESTATUS: true,
-          FECHA_ACTUALIZACION: new Date()
-        },
-        { where: { ID_MATRICULA: req.params.id } }
-      );
-      res.json({ ok: true });
-    } catch (error) {
-      console.error(error);
-      res.json({ ok: false });
     }
   },
 
@@ -130,5 +167,27 @@ module.exports = {
       console.error(error);
       res.render('error', { mensaje: 'Error al eliminar matrícula' });
     }
-  }
+  },
+
+  reactivar: async (req, res) => {
+    try {
+      await Matricula.update(
+        {
+          ESTATUS: true,
+          FECHA_ACTUALIZACION: new Date()
+        },
+        { where: { ID_MATRICULA: req.params.id } }
+      );
+
+      // Recalcular promedio final al reactivar
+      await actualizarPromedioFinalMatricula(req.params.id);
+
+      res.json({ ok: true });
+    } catch (error) {
+      console.error(error);
+      res.json({ ok: false });
+    }
+  },
+
+  actualizarPromedioFinalMatricula
 };

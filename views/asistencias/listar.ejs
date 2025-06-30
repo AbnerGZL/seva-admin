@@ -18,8 +18,6 @@
             <th class="px-4 py-2 border">ID</th>
             <th class="px-4 py-2 border">Fecha</th>
             <th class="px-4 py-2 border">Matrícula</th>
-            <th class="px-4 py-2 border">Profesor</th>
-            <th class="px-4 py-2 border">Curso</th>
             <th class="px-4 py-2 border">Estado</th>
             <th class="px-4 py-2 border">Estatus</th>
             <th class="px-4 py-2 border">Acciones</th>
@@ -38,8 +36,6 @@
                   N/A
                 <% } %>
               </td>
-              <td class="px-4 py-2 border"><%= asistencia.profesor?.NOMBRES %> <%= asistencia.profesor?.APELLIDOS %></td>
-              <td class="px-4 py-2 border"><%= asistencia.curso?.NOMBRE || 'N/A' %></td>
               <td class="px-4 py-2 border">
                 <% if (asistencia.ESTADO === 'A') { %>
                   <span class="text-green-600 font-semibold">Asistió</span>

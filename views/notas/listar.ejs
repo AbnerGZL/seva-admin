@@ -50,11 +50,18 @@
                 <% } %>
               </td>
 
-              <!-- Curso -->
-              <td class="py-2 px-4 border-b"><%= nota.curso?.NOMBRE || 'N/A' %></td>
+              <td class="py-2 px-4 border-b">
+                <%= nota.cronograma?.curso?.NOMBRE || 'Sin curso' %>
+              </td>
 
-              <td class="py-2 px-4 border-b"><%= nota.PROMEDIOP %></td>
-              <td class="py-2 px-4 border-b"><%= nota.PROMEDIOT %></td>
+              <!-- Promedios con tooltip -->
+              <td class="py-2 px-4 border-b" title="Promedio de prácticas calculado automáticamente">
+                <%= nota.PROMEDIOP ? parseFloat(nota.PROMEDIOP).toFixed(2) : '0.00' %>
+              </td>
+              <td class="py-2 px-4 border-b" title="Promedio de teoría calculado automáticamente">
+                <%= nota.PROMEDIOT ? parseFloat(nota.PROMEDIOT).toFixed(2) : '0.00' %>
+              </td>
+
               <td class="py-2 px-4 border-b"><%= nota.UNIDAD %></td>
 
               <td class="px-4 py-2">

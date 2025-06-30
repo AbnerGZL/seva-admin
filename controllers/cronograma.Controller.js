@@ -1,4 +1,79 @@
-const { Cronograma, Matricula, Curso, Profesor, Estudiante, Usuario, Carrera } = require('../models');
+const { Cronograma, Matricula, Curso, Profesor, Estudiante, Usuario, Carrera, Nota } = require('../models');
+
+async function actualizarEstadoFinal(ID_CRONOGRAMA) {
+  try {
+    const cronograma = await Cronograma.findByPk(ID_CRONOGRAMA);
+    if (!cronograma) return;
+
+    const ID_MATRICULA = cronograma.ID_MATRICULA;
+
+    // Calcular NOTAF para el cronograma
+    const notas = await Nota.findAll({
+      where: { ID_CRONOGRAMA, ESTATUS: true }
+    });
+
+    if (notas.length === 0) return;
+
+    let sumaP = 0, sumaT = 0;
+    notas.forEach(n => {
+      sumaP += parseFloat(n.PROMEDIOP || 0);
+      sumaT += parseFloat(n.PROMEDIOT || 0);
+    });
+
+    const promedioP = sumaP / notas.length;
+    const promedioT = sumaT / notas.length;
+    const notaf = parseFloat(((promedioP + promedioT) / 2).toFixed(2));
+    const estado = notaf >= 13 ? 'Aprobado' : 'Desaprobado';
+
+    await Cronograma.update(
+      {
+        NOTAF: notaf,
+        ESTADOC: estado,
+        FECHA_ACTUALIZACION: new Date()
+      },
+      { where: { ID_CRONOGRAMA } }
+    );
+
+    // Obtener todos los cronogramas activos de la matrícula
+    const cronogramas = await Cronograma.findAll({
+      where: { ID_MATRICULA, ESTATUS: true }
+    });
+
+    // Filtrar los que tengan NOTAF válido
+    const notasFinales = cronogramas
+      .map(c => parseFloat(c.NOTAF))
+      .filter(n => !isNaN(n));
+
+    if (notasFinales.length < 2) {
+      // ⚠️ Forzamos null si no hay suficientes notas
+      await Matricula.update(
+        {
+          PROMEDIOF: null,
+          CONDICION: null,
+          FECHA_ACTUALIZACION: new Date()
+        },
+        { where: { ID_MATRICULA } }
+      );
+      return;
+    }
+
+    // Promediar correctamente si hay 2 o más
+    const sumaNotas = notasFinales.reduce((acc, n) => acc + n, 0);
+    const promedioFinal = parseFloat((sumaNotas / notasFinales.length).toFixed(2));
+    const condicion = promedioFinal >= 11 ? 'Aprobado' : 'Desaprobado';
+
+    await Matricula.update(
+      {
+        PROMEDIOF: promedioFinal,
+        CONDICION: condicion,
+        FECHA_ACTUALIZACION: new Date()
+      },
+      { where: { ID_MATRICULA } }
+    );
+  } catch (error) {
+    console.error('Error al actualizar estado final:', error);
+  }
+}
 
 module.exports = {
   listar: async (req, res) => {
@@ -65,7 +140,7 @@ module.exports = {
         throw new Error('Todos los campos son obligatorios.');
       }
 
-      await Cronograma.create({
+      const nuevo = await Cronograma.create({
         ID_MATRICULA,
         ID_CURSO,
         ID_PROFESOR,
@@ -74,6 +149,8 @@ module.exports = {
         FECHA_CREACION: new Date(),
         FECHA_ACTUALIZACION: new Date()
       });
+
+      await actualizarEstadoFinal(nuevo.ID_CRONOGRAMA);
 
       res.redirect('/cronogramas');
     } catch (error) {
@@ -157,6 +234,8 @@ module.exports = {
         { where: { ID_CRONOGRAMA: req.params.id } }
       );
 
+      await actualizarEstadoFinal(req.params.id);
+
       res.redirect('/cronogramas');
     } catch (error) {
       console.error(error);
@@ -211,5 +290,7 @@ module.exports = {
       console.error(error);
       res.status(500).json({ ok: false });
     }
-  }
+  },
+
+  actualizarEstadoFinal
 };

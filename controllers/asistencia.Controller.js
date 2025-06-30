@@ -1,4 +1,5 @@
-const { Asistencia, Cronograma, Profesor, Curso, Usuario, Matricula, Estudiante } = require('../models');
+const { Asistencia, Cronograma, Matricula, Estudiante, Profesor, Usuario } = require('../models');
+const Curso = require('../models/Curso');
 
 const listar = async (req, res) => {
   try {
@@ -13,15 +14,14 @@ const listar = async (req, res) => {
               as: 'matricula',
               include: [{ model: Estudiante, as: 'estudiante' }]
             },
-            { model: Curso, as: 'curso' }
+            { model: Curso, as: 'curso' },
+            {
+              model: Profesor,
+              as: 'profesor',
+              include: [{ model: Usuario, as: 'usuario' }]
+            }
           ]
-        },
-        {
-          model: Profesor,
-          as: 'profesor',
-          include: [{ model: Usuario, as: 'usuario' }]
-        },
-        { model: Curso, as: 'curso' }
+        }
       ]
     });
 
@@ -46,19 +46,8 @@ const mostrarFormularioCrear = async (req, res) => {
       ]
     });
 
-    const profesores = await Profesor.findAll({
-      where: { ESTATUS: true },
-      include: [{ model: Usuario, as: 'usuario' }]
-    });
-
-    const cursos = await Curso.findAll({
-      where: { ESTATUS: true }
-    });
-
     res.render('asistencias/crear', {
       cronogramas,
-      profesores,
-      cursos,
       formData: {},
       error: null
     });
@@ -69,13 +58,11 @@ const mostrarFormularioCrear = async (req, res) => {
 };
 
 const crear = async (req, res) => {
-  const { ID_CRONOGRAMA, ID_PROFESOR, ID_CURSO, FECHA, ESTADO } = req.body;
+  const { ID_CRONOGRAMA, FECHA, ESTADO } = req.body;
 
   try {
     await Asistencia.create({
       ID_CRONOGRAMA,
-      ID_PROFESOR,
-      ID_CURSO,
       FECHA,
       ESTADO,
       ESTATUS: true,
@@ -99,19 +86,8 @@ const crear = async (req, res) => {
       ]
     });
 
-    const profesores = await Profesor.findAll({
-      where: { ESTATUS: true },
-      include: [{ model: Usuario, as: 'usuario' }]
-    });
-
-    const cursos = await Curso.findAll({
-      where: { ESTATUS: true }
-    });
-
     res.render('asistencias/crear', {
       cronogramas,
-      profesores,
-      cursos,
       formData: req.body,
       error: 'Error al registrar la asistencia'
     });
@@ -139,20 +115,9 @@ const mostrarFormularioEditar = async (req, res) => {
       ]
     });
 
-    const profesores = await Profesor.findAll({
-      where: { ESTATUS: true },
-      include: [{ model: Usuario, as: 'usuario' }]
-    });
-
-    const cursos = await Curso.findAll({
-      where: { ESTATUS: true }
-    });
-
     res.render('asistencias/editar', {
       asistencia,
       cronogramas,
-      profesores,
-      cursos,
       error: null
     });
   } catch (error) {
@@ -163,14 +128,12 @@ const mostrarFormularioEditar = async (req, res) => {
 
 const actualizar = async (req, res) => {
   const { id } = req.params;
-  const { ID_CRONOGRAMA, ID_PROFESOR, ID_CURSO, FECHA, ESTADO } = req.body;
+  const { ID_CRONOGRAMA, FECHA, ESTADO } = req.body;
 
   try {
     await Asistencia.update(
       {
         ID_CRONOGRAMA,
-        ID_PROFESOR,
-        ID_CURSO,
         FECHA,
         ESTADO,
         FECHA_ACTUALIZACION: new Date()

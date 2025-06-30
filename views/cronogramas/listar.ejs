@@ -21,6 +21,8 @@
             <th class="px-4 py-2 border">Estudiante</th>
             <th class="px-4 py-2 border">Profesor</th>
             <th class="px-4 py-2 border">Cursación</th>
+            <th class="px-4 py-2 border">Nota Final</th>
+            <th class="px-4 py-2 border">Condición</th>
             <th class="px-4 py-2 border">Estatus</th>
             <th class="px-4 py-2 border">Acciones</th>
           </tr>
@@ -48,6 +50,19 @@
                   <%= c.profesor?.NOMBRES %> <%= c.profesor?.APELLIDOS %>
                 </td>
                 <td class="px-4 py-2 border"><%= c.CURSACION %></td>
+                <td class="px-4 py-2 border">
+                  <% const notaFinal = parseFloat(c.NOTAF); %>
+                  <%= !isNaN(notaFinal) ? notaFinal.toFixed(2) : 'Sin nota' %>
+                </td>
+                <td class="px-4 py-2 border">
+                  <% if (c.ESTADOC === 'Aprobado') { %>
+                    <span class="px-2 py-1 rounded text-white bg-green-500">Aprobado</span>
+                  <% } else if (c.ESTADOC === 'Desaprobado') { %>
+                    <span class="px-2 py-1 rounded text-white bg-red-500">Desaprobado</span>
+                  <% } else { %>
+                    <span class="px-2 py-1 rounded text-gray-600 bg-gray-200">Pendiente</span>
+                  <% } %>
+                </td>
                 <td class="px-4 py-2 border">
                   <span class="px-2 py-1 rounded text-white <%= c.ESTATUS ? 'bg-green-500' : 'bg-red-500' %>">
                     <%= c.ESTATUS ? 'Activo' : 'Inactivo' %>

@@ -18,9 +18,17 @@ ID_CURSO: {
 ID_PROFESOR: {
   type: DataTypes.INTEGER,
   allowNull: false
+},
+ESTADOC: {
+  type: DataTypes.STRING,
+  allowNull: true
+},
+NOTAF: {
+  type: DataTypes.DECIMAL(5,2),
+  allowNull: true
 },            
 CURSACION: {
-  type: DataTypes.STRING(45),
+  type: DataTypes.INTEGER,
   allowNull: false
 },
 ESTATUS: {

@@ -11,10 +11,6 @@ const Nota = sequelize.define('Nota', {
     type: DataTypes.INTEGER,
     allowNull: false
   },
-  ID_CURSO: {
-    type: DataTypes.INTEGER,
-    allowNull: false,
-  },
   PROMEDIOP: {
     type: DataTypes.DECIMAL(5, 2),
     allowNull: false,

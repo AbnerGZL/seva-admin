@@ -17,7 +17,10 @@
         <thead class="bg-gray-100 text-gray-700 uppercase">
           <tr>
             <th class="py-3 px-4 border">ID</th>
-            <th class="py-3 px-4 border">Nota ID</th>
+            <th class="py-3 px-4 border">Estudiante</th>
+            <th class="py-3 px-4 border">Curso</th>
+            <th class="py-3 px-4 border">Unidad</th>
+            <th class="py-3 px-4 border">Ciclo</th>
             <th class="py-3 px-4 border">Práctica</th>
             <th class="py-3 px-4 border">Teoría</th>
             <th class="py-3 px-4 border">Fecha</th>
@@ -28,17 +31,26 @@
         <tbody>
           <% if (notaDetalles.length === 0) { %>
             <tr>
-              <td colspan="7" class="py-4 px-4 text-center text-gray-500">No hay detalles registrados.</td>
+              <td colspan="9" class="py-4 px-4 text-center text-gray-500">No hay detalles registrados.</td>
             </tr>
           <% } else { %>
-            <% notaDetalles.forEach(det => { %>
+            <% notaDetalles.forEach(det => { 
+              const nota = det.nota;
+              const cronograma = nota?.cronograma;
+              const estudiante = cronograma?.matricula?.estudiante;
+              const curso = cronograma?.curso;
+              const ciclo = cronograma?.matricula?.CICLO;
+            %>
               <tr class="border-b hover:bg-gray-50">
                 <td class="py-2 px-4 border"><%= det.ID_NOTA_DETALLE %></td>
-                <td class="py-2 px-4 border">Nota #<%= det.ID_NOTA %></td>
+                <td class="py-2 px-4 border"><%= estudiante?.NOMBRES %> <%= estudiante?.APELLIDOS %></td>
+                <td class="py-2 px-4 border"><%= curso?.NOMBRE %></td>
+                <td class="py-2 px-4 border"><%= det.nota?.UNIDAD %></td>
+                <td class="py-2 px-4 border"><%= ciclo %></td>
                 <td class="py-2 px-4 border"><%= parseFloat(det.PRACTICA).toFixed(2) %></td>
                 <td class="py-2 px-4 border"><%= parseFloat(det.TEORIA).toFixed(2) %></td>
                 <td class="py-2 px-4 border"><%= det.FECHA %></td>
-                <td class="px-4 py-2">
+                <td class="px-4 py-2 border">
                   <% if (det.ESTATUS) { %>
                     <span class="text-green-600 font-semibold">Activo</span>
                   <% } else { %>

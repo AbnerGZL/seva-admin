@@ -17,11 +17,20 @@
 
       <!-- Nota -->
       <div>
-        <label for="ID_NOTA" class="block text-gray-700 mb-1">Nota</label>
+        <label for="ID_NOTA" class="block text-gray-700 mb-1 font-medium">Nota</label>
         <select name="ID_NOTA" id="ID_NOTA" required class="w-full px-3 py-2 border border-gray-300 rounded">
-          <% notas.forEach(nota => { %>
-            <option value="<%= nota.ID_NOTA %>" <%= notaDetalle.ID_NOTA == nota.ID_NOTA ? 'selected' : '' %>>
-              Nota #<%= nota.ID_NOTA %>
+          <% notas.forEach(nota => { 
+            const isSelected = notaDetalle.ID_NOTA == nota.ID_NOTA;
+            const isDisabled = nota.detalleCount >= 4 && !isSelected;
+          %>
+            <option 
+              value="<%= nota.ID_NOTA %>" 
+              <%= isSelected ? 'selected' : '' %> 
+              <%= isDisabled ? 'disabled' : '' %>>
+              <%= nota.cronograma?.matricula?.estudiante?.NOMBRES %> <%= nota.cronograma?.matricula?.estudiante?.APELLIDOS %> -
+              <%= nota.cronograma?.curso?.NOMBRE %> -
+              Ciclo <%= nota.cronograma?.matricula?.CICLO %> -
+              (<%= nota.detalleCount %>/4)
             </option>
           <% }) %>
         </select>
@@ -30,15 +39,15 @@
       <!-- Práctica -->
       <div>
         <label for="PRACTICA" class="block text-gray-700 mb-1">Práctica</label>
-        <input type="number" name="PRACTICA" id="PRACTICA" required step="0.01" min="0"
+        <input type="number" name="PRACTICA" id="PRACTICA" required step="0.01" min="0" max="20"
           value="<%= notaDetalle.PRACTICA %>"
           class="w-full px-3 py-2 border border-gray-300 rounded">
       </div>
-
+      
       <!-- Teoría -->
       <div>
         <label for="TEORIA" class="block text-gray-700 mb-1">Teoría</label>
-        <input type="number" name="TEORIA" id="TEORIA" required step="0.01" min="0"
+        <input type="number" name="TEORIA" id="TEORIA" required step="0.01" min="0" max="20"
           value="<%= notaDetalle.TEORIA %>"
           class="w-full px-3 py-2 border border-gray-300 rounded">
       </div>

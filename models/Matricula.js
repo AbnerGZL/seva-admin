@@ -31,6 +31,10 @@ const Matricula = sequelize.define('Matricula', {
     type: DataTypes.INTEGER,
     allowNull: false,
   },
+  PROMEDIOF: {
+    type: DataTypes.DECIMAL(5, 2),
+    allowNull: false,
+  },
   CONDICION: {
     type: DataTypes.STRING(45),
     allowNull: true,
