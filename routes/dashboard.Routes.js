@@ -31,18 +31,18 @@ router.get('/', async (req, res) => {
       totalNotaDetalles,
       totalCronograma
     ] = await Promise.all([
-      Estudiante.count({ where: { ESTATUS: 1 } }),
-      Curso.count({ where: { ESTATUS: 1 } }),
-      Profesor.count({ where: { ESTATUS: 1 } }),
-      Usuario.count({ where: { ESTATUS: 1 } }),
+      Estudiante.count({ where: { ESTATUS: true } }),
+      Curso.count({ where: { ESTATUS: true } }),
+      Profesor.count({ where: { ESTATUS: true } }),
+      Usuario.count({ where: { ESTATUS: true } }),
       TipoUsuario.count(),
       Carrera.count({ where: { ESTATUS: true } }),
-      Nota.count({ where: { ESTATUS: 1 } }),
-      Matricula.count({ where: { ESTATUS: 1 } }),
-      Pago.count({ where: { ESTATUS: 1 } }),
-      Asistencia.count({ where: { ESTATUS: 1 } }),
-      NotaDetalle.count({ where: { ESTATUS: 1 } }),
-      Cronograma.count({ where: { ESTATUS: 1 } }) 
+      Nota.count({ where: { ESTATUS: true } }),
+      Matricula.count({ where: { ESTATUS: true } }),
+      Pago.count({ where: { ESTATUS: true } }),
+      Asistencia.count({ where: { ESTATUS: true } }),
+      NotaDetalle.count({ where: { ESTATUS: true } }),
+      Cronograma.count({ where: { ESTATUS: true } }) 
     ]);
 
     res.render('dashboard', {

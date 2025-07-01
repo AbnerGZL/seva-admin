@@ -30,7 +30,7 @@ module.exports = {
 
   crearForm: async (req, res) => {
     try {
-      const tipos = await TipoUsuario.findAll({ where: { ESTATUS: 1 } });
+      const tipos = await TipoUsuario.findAll({ where: { ESTATUS: true } });
       const nuevoCodigo = await generarCodigoUsuarioUnico();
 
       res.render('usuarios/crear', {
@@ -49,7 +49,7 @@ module.exports = {
 
     try {
       if (!ID_TIPO || !EMAIL || !CONTRASEÑA) {
-        const tipos = await TipoUsuario.findAll({ where: { ESTATUS: 1 } });
+        const tipos = await TipoUsuario.findAll({ where: { ESTATUS: true } });
         return res.render('usuarios/crear', {
           tipos,
           formData: { ...req.body },
@@ -59,7 +59,7 @@ module.exports = {
 
       const tipo = await TipoUsuario.findByPk(ID_TIPO);
       if (!tipo) {
-        const tipos = await TipoUsuario.findAll({ where: { ESTATUS: 1 } });
+        const tipos = await TipoUsuario.findAll({ where: { ESTATUS: true } });
         return res.render('usuarios/crear', {
           tipos,
           formData: { ...req.body },
@@ -69,7 +69,7 @@ module.exports = {
 
       const usuarioExistente = await Usuario.findOne({ where: { EMAIL } });
       if (usuarioExistente) {
-        const tipos = await TipoUsuario.findAll({ where: { ESTATUS: 1 } });
+        const tipos = await TipoUsuario.findAll({ where: { ESTATUS: true } });
         return res.render('usuarios/crear', {
           tipos,
           formData: { ...req.body },
@@ -92,7 +92,7 @@ module.exports = {
       res.redirect('/usuarios');
     } catch (error) {
       console.error('Error al crear usuario:', error);
-      const tipos = await TipoUsuario.findAll({ where: { ESTATUS: 1 } });
+      const tipos = await TipoUsuario.findAll({ where: { ESTATUS: true } });
       let errorMessage = 'Error al crear usuario';
       if (error.name === 'SequelizeValidationError') {
         errorMessage = error.errors.map(e => e.message).join(', ');
@@ -110,7 +110,7 @@ module.exports = {
   editarForm: async (req, res) => {
     try {
       const usuario = await Usuario.findByPk(req.params.id);
-      const tipos = await TipoUsuario.findAll({ where: { ESTATUS: 1 } });
+      const tipos = await TipoUsuario.findAll({ where: { ESTATUS: true } });
 
       if (!usuario) {
         return res.render('error', { mensaje: 'Usuario no encontrado' });
@@ -158,7 +158,7 @@ module.exports = {
     } catch (error) {
       console.error(error);
       const usuario = await Usuario.findByPk(req.params.id);
-      const tipos = await TipoUsuario.findAll({ where: { ESTATUS: 1 } });
+      const tipos = await TipoUsuario.findAll({ where: { ESTATUS: true } });
       let errorMessage = 'Error al actualizar usuario';
       if (error.name === 'SequelizeValidationError') {
         errorMessage = error.errors.map(e => e.message).join(', ');

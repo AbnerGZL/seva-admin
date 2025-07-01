@@ -60,7 +60,9 @@ const mostrarFormularioCrear = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.render('error', { mensaje: 'Error al cargar el formulario de creación' });
+    res.render('error', {
+      mensaje: 'Error al cargar el formulario de creación'
+    });
   }
 };
 
@@ -129,7 +131,9 @@ const mostrarFormularioEditar = async (req, res) => {
     });
   } catch (error) {
     console.error(error);
-    res.render('error', { mensaje: 'Error al cargar el formulario de edición' });
+    res.render('error', {
+      mensaje: 'Error al cargar el formulario de edición'
+    });
   }
 };
 
@@ -150,7 +154,9 @@ const actualizar = async (req, res) => {
     res.redirect('/asistencias');
   } catch (error) {
     console.error(error);
-    res.render('error', { mensaje: 'Error al actualizar la asistencia' });
+    res.render('error', {
+      mensaje: 'Error al actualizar la asistencia'
+    });
   }
 };
 
@@ -165,7 +171,9 @@ const eliminar = async (req, res) => {
     res.redirect('/asistencias');
   } catch (error) {
     console.error(error);
-    res.render('error', { mensaje: 'Error al eliminar la asistencia' });
+    res.render('error', {
+      mensaje: 'Error al eliminar la asistencia'
+    });
   }
 };
 

@@ -12,7 +12,7 @@ router.post('/login', async (req, res) => {
 
   try {
     const usuario = await Usuario.findOne({
-      where: { EMAIL, ESTATUS: 1 },
+      where: { EMAIL, ESTATUS: true },
       include: [{ model: TipoUsuario, as: 'tipo' }]
     });
 

@@ -60,7 +60,7 @@ async function actualizarEstadoFinal(ID_CRONOGRAMA) {
     // Promediar correctamente si hay 2 o más
     const sumaNotas = notasFinales.reduce((acc, n) => acc + n, 0);
     const promedioFinal = parseFloat((sumaNotas / notasFinales.length).toFixed(2));
-    const condicion = promedioFinal >= 11 ? 'Aprobado' : 'Desaprobado';
+    const condicion = promedioFinal >= 13 ? 'Aprobado' : 'Desaprobado';
 
     await Matricula.update(
       {

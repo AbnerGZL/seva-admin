@@ -14,12 +14,12 @@ module.exports = {
   crearForm: async (req, res) => {
     try {
       const usuarios = await Usuario.findAll({
-        where: { ESTATUS: 1 },
+        where: { ESTATUS: true },
         include: [
           {
             model: TipoUsuario,
             as: 'tipo',
-            where: { NOMBRE: 'Profesor', ESTATUS: 1 }
+            where: { NOMBRE: 'Profesor', ESTATUS: true }
           },
           {
             model: Profesor,
@@ -77,7 +77,7 @@ module.exports = {
           {
             model: TipoUsuario,
             as: 'tipo',
-            where: { NOMBRE: 'Profesor', ESTATUS: 1 }
+            where: { NOMBRE: 'Profesor', ESTATUS: true }
           },
           {
             model: Profesor,
