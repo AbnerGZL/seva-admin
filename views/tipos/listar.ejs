@@ -59,6 +59,35 @@
         </tbody>
       </table>
     </div>
+    <% if (totalPages > 1) {
+  const groupSize = 3;
+  const groupIndex = Math.floor((currentPage - 1) / groupSize);
+  const start = groupIndex * groupSize + 1;
+  const end = Math.min(start + groupSize - 1, totalPages);
+%>
+  <div class="flex justify-center mt-6">
+    <nav class="inline-flex items-center space-x-1 text-sm">
+      <% if (start > 1) { %>
+        <a href="?page=<%= start - 1 %>" class="px-3 py-1 border rounded bg-white text-blue-600 border-gray-300 hover:bg-blue-100">
+          &laquo;
+        </a>
+      <% } %>
+
+      <% for (let i = start; i <= end; i++) { %>
+        <a href="?page=<%= i %>" class="px-3 py-1 border rounded <%= currentPage === i ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-blue-600 border-gray-300 hover:bg-blue-100' %>">
+          <%= i %>
+        </a>
+      <% } %>
+
+      <% if (end < totalPages) { %>
+        <a href="?page=<%= end + 1 %>" class="px-3 py-1 border rounded bg-white text-blue-600 border-gray-300 hover:bg-blue-100">
+          &raquo;
+        </a>
+      <% } %>
+    </nav>
+  </div>
+<% } %>
+
   </div>
 </div>
 

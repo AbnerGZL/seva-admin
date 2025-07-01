@@ -7,11 +7,10 @@ async function actualizarPromedioFinalMatricula(idMatricula) {
       where: {
         ID_MATRICULA: idMatricula,
         ESTATUS: true,
-        NOTAF: { [Op.ne]: null } // Asegura que NO sea null
+        NOTAF: { [Op.ne]: null }
       }
     });
 
-    // Filtrar por cronogramas que tengan NOTAF numérico y válido
     const notasValidas = cronogramas.filter(c => !isNaN(parseFloat(c.NOTAF)));
 
     if (notasValidas.length < 2) {
@@ -46,13 +45,27 @@ async function actualizarPromedioFinalMatricula(idMatricula) {
 module.exports = {
   listar: async (req, res) => {
     try {
-      const matriculas = await Matricula.findAll({
+      const page = parseInt(req.query.page) || 1;
+      const limit = 10;
+      const offset = (page - 1) * limit;
+
+      const { count, rows: matriculas } = await Matricula.findAndCountAll({
+        limit,
+        offset,
+        order: [['ID_MATRICULA', 'DESC']],
         include: [
           { model: Estudiante, as: 'estudiante' },
           { model: Carrera, as: 'carrera' }
         ]
       });
-      res.render('matriculas/listar', { matriculas });
+
+      const totalPages = Math.ceil(count / limit);
+
+      res.render('matriculas/listar', {
+        matriculas,
+        currentPage: page,
+        totalPages
+      });
     } catch (error) {
       console.error(error);
       res.render('error', { mensaje: 'Error al listar matrículas' });

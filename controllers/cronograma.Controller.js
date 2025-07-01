@@ -78,7 +78,11 @@ async function actualizarEstadoFinal(ID_CRONOGRAMA) {
 module.exports = {
   listar: async (req, res) => {
     try {
-      const cronogramas = await Cronograma.findAll({
+      const page = parseInt(req.query.page) || 1;
+      const limit = 10;
+      const offset = (page - 1) * limit;
+    
+      const { count, rows: cronogramas } = await Cronograma.findAndCountAll({
         include: [
           {
             model: Matricula,
@@ -94,9 +98,19 @@ module.exports = {
             as: 'profesor',
             include: [{ model: Usuario, as: 'usuario' }]
           }
-        ]
+        ],
+        order: [['ID_CRONOGRAMA', 'DESC']],
+        limit,
+        offset
       });
-      res.render('cronogramas/listar', { cronogramas });
+    
+      const totalPages = Math.ceil(count / limit);
+    
+      res.render('cronogramas/listar', {
+        cronogramas,
+        currentPage: page,
+        totalPages
+      });
     } catch (error) {
       console.error(error);
       res.render('error', { mensaje: 'Error al listar cronogramas' });

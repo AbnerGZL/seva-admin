@@ -3,8 +3,23 @@ const { Profesor, Usuario, TipoUsuario } = require('../models');
 module.exports = {
   listar: async (req, res) => {
     try {
-      const profesores = await Profesor.findAll();
-      res.render('profesores/listar', { profesores });
+      const page = parseInt(req.query.page) || 1;
+      const limit = 10;
+      const offset = (page - 1) * limit;
+    
+      const { count, rows: profesores } = await Profesor.findAndCountAll({
+        limit,
+        offset,
+        order: [['ID_PROFESOR', 'DESC']]
+      });
+    
+      const totalPages = Math.ceil(count / limit);
+    
+      res.render('profesores/listar', {
+        profesores,
+        currentPage: page,
+        totalPages
+      });
     } catch (error) {
       console.error(error);
       res.render('error', { mensaje: 'Error al listar profesores' });

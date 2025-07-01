@@ -4,38 +4,47 @@ const { actualizarEstadoFinal } = require('./cronograma.Controller');
 
 module.exports = {
   listar: async (req, res) => {
-    try {
-      const notas = await Nota.findAll({
-        include: [
-          {
-            model: Cronograma,
-            as: 'cronograma',
-            include: [
-              {
-                model: Matricula,
-                as: 'matricula',
-                include: [
-                  { model: Estudiante, as: 'estudiante' },
-                  { model: Carrera, as: 'carrera' }
-                ]
-              },
-              { model: Profesor, as: 'profesor' },
-              { model: Curso, as: 'curso' }
-            ]
-          }
-        ]
-      });
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const offset = (page - 1) * limit;
 
-      for (const nota of notas) {
-        await actualizarPromedios(nota.ID_NOTA);
-      }
+    const { count, rows: notas } = await Nota.findAndCountAll({
+      limit,
+      offset,
+      order: [['ID_NOTA', 'DESC']],
+      include: [
+        {
+          model: Cronograma,
+          as: 'cronograma',
+          include: [
+            {
+              model: Matricula,
+              as: 'matricula',
+              include: [
+                { model: Estudiante, as: 'estudiante' },
+                { model: Carrera, as: 'carrera' }
+              ]
+            },
+            { model: Profesor, as: 'profesor' },
+            { model: Curso, as: 'curso' }
+          ]
+        }
+      ]
+    });
 
-      res.render('notas/listar', { notas });
-    } catch (error) {
-      console.error(error);
-      res.render('error', { mensaje: 'Error al listar notas' });
-    }
-  },
+    const totalPages = Math.ceil(count / limit);
+
+    res.render('notas/listar', {
+      notas,
+      currentPage: page,
+      totalPages
+    });
+  } catch (error) {
+    console.error(error);
+    res.render('error', { mensaje: 'Error al listar notas' });
+  }
+},
 
   crearForm: async (req, res) => {
     try {

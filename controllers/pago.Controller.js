@@ -15,24 +15,38 @@ const generarCodigoReciboUnico = async () => {
 };
 
 module.exports = {
-  listar: async (req, res) => {
-    try {
-      const pagos = await Pago.findAll({
-        include: [{
-          model: Matricula,
-          as: 'matricula',
-          include: [
-            { model: Estudiante, as: 'estudiante' },
-            { model: Carrera, as: 'carrera' }
-          ]
-        }]
-      });
-      res.render('pagos/listar', { pagos });
-    } catch (error) {
-      console.error(error);
-      res.render('error', { mensaje: 'Error al listar pagos' });
-    }
-  },
+listar: async (req, res) => {
+  try {
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const offset = (page - 1) * limit;
+
+    const { count, rows: pagos } = await Pago.findAndCountAll({
+      include: [{
+        model: Matricula,
+        as: 'matricula',
+        include: [
+          { model: Estudiante, as: 'estudiante' },
+          { model: Carrera, as: 'carrera' }
+        ]
+      }],
+      limit,
+      offset,
+      order: [['ID_PAGO', 'DESC']]
+    });
+
+    const totalPages = Math.ceil(count / limit);
+
+    res.render('pagos/listar', {
+      pagos,
+      currentPage: page,
+      totalPages
+    });
+  } catch (error) {
+    console.error(error);
+    res.render('error', { mensaje: 'Error al listar pagos' });
+  }
+},
 
   crearForm: async (req, res) => {
     try {

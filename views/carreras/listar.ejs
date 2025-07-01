@@ -72,6 +72,35 @@
         </tbody>
       </table>
     </div>
+    <% if (totalPages > 1) {
+  const pageGroupSize = 3;
+  const currentGroup = Math.floor((currentPage - 1) / pageGroupSize);
+  const startPage = currentGroup * pageGroupSize + 1;
+  const endPage = Math.min(startPage + pageGroupSize - 1, totalPages);
+%>
+  <div class="flex justify-center mt-6">
+    <nav class="inline-flex items-center space-x-1 text-sm">
+      <% if (startPage > 1) { %>
+        <a href="/carreras?page=<%= startPage - 1 %>" class="px-3 py-1 border rounded-md bg-white text-blue-600 border-gray-300 hover:bg-blue-100">
+          &laquo;
+        </a>
+      <% } %>
+
+      <% for (let i = startPage; i <= endPage; i++) { %>
+        <a href="/carreras?page=<%= i %>" class="px-3 py-1 border rounded-md <%= currentPage === i ? 'bg-blue-600 text-white border-blue-600' : 'bg-white text-blue-600 border-gray-300 hover:bg-blue-100' %>">
+          <%= i %>
+        </a>
+      <% } %>
+
+      <% if (endPage < totalPages) { %>
+        <a href="/carreras?page=<%= endPage + 1 %>" class="px-3 py-1 border rounded-md bg-white text-blue-600 border-gray-300 hover:bg-blue-100">
+          &raquo;
+        </a>
+      <% } %>
+    </nav>
+  </div>
+<% } %>
+
   </div>
 </div>
 

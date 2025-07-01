@@ -10,7 +10,11 @@ const {
 
 const listar = async (req, res) => {
   try {
-    const asistencias = await Asistencia.findAll({
+    const page = parseInt(req.query.page) || 1;
+    const limit = 10;
+    const offset = (page - 1) * limit;
+
+    const { count, rows: asistencias } = await Asistencia.findAndCountAll({
       include: [
         {
           model: Cronograma,
@@ -29,10 +33,19 @@ const listar = async (req, res) => {
             }
           ]
         }
-      ]
+      ],
+      limit,
+      offset,
+      order: [['ID_ASISTENCIA', 'DESC']]
     });
 
-    res.render('asistencias/listar', { asistencias });
+    const totalPages = Math.ceil(count / limit);
+
+    res.render('asistencias/listar', {
+      asistencias,
+      currentPage: page,
+      totalPages
+    });
   } catch (error) {
     console.error(error);
     res.render('error', { mensaje: 'Error al listar asistencias' });

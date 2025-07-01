@@ -3,8 +3,23 @@ const { TipoUsuario } = require('../models');
 module.exports = {
   listar: async (req, res) => {
     try {
-      const tipos = await TipoUsuario.findAll();
-      res.render('tipos/listar', { tipos });
+      const page = parseInt(req.query.page) || 1;
+      const limit = 10;
+      const offset = (page - 1) * limit;
+    
+      const { count, rows: tipos } = await TipoUsuario.findAndCountAll({
+        limit,
+        offset,
+        order: [['ID_TIPO', 'DESC']]
+      });
+    
+      const totalPages = Math.ceil(count / limit);
+    
+      res.render('tipos/listar', {
+        tipos,
+        currentPage: page,
+        totalPages
+      });
     } catch (error) {
       console.error(error);
       res.render('error', { mensaje: 'Error al listar tipos de usuario' });

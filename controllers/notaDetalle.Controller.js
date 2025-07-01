@@ -37,7 +37,15 @@ async function actualizarPromedios(idNota) {
 module.exports = {
   listar: async (req, res) => {
     try {
-      const notaDetalles = await NotaDetalle.findAll({
+      const page = parseInt(req.query.page) || 1;
+      const limit = 10;
+      const offset = (page - 1) * limit;
+    
+      const { count, rows: notaDetalles } = await NotaDetalle.findAndCountAll({
+        where: { ESTATUS: true },
+        limit,
+        offset,
+        order: [['ID_NOTA_DETALLE', 'DESC']],
         include: [
           {
             association: 'nota',
@@ -56,7 +64,14 @@ module.exports = {
           }
         ]
       });
-      res.render('notaDetalle/listar', { notaDetalles });
+    
+      const totalPages = Math.ceil(count / limit);
+    
+      res.render('notaDetalle/listar', {
+        notaDetalles,
+        currentPage: page,
+        totalPages
+      });
     } catch (error) {
       console.error(error);
       res.render('error', { mensaje: 'Error al listar los detalles de nota' });

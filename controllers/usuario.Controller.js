@@ -18,10 +18,24 @@ const generarCodigoUsuarioUnico = async () => {
 module.exports = {
   listar: async (req, res) => {
     try {
-      const usuarios = await Usuario.findAll({
-        include: [{ model: TipoUsuario, as: 'tipo' }]
+      const page = parseInt(req.query.page) || 1;
+      const limit = 10;
+      const offset = (page - 1) * limit;
+    
+      const { count, rows: usuarios } = await Usuario.findAndCountAll({
+        include: [{ model: TipoUsuario, as: 'tipo' }],
+        limit,
+        offset,
+        order: [['ID_USUARIO', 'DESC']]
       });
-      res.render('usuarios/listar', { usuarios });
+    
+      const totalPages = Math.ceil(count / limit);
+    
+      res.render('usuarios/listar', {
+        usuarios,
+        currentPage: page,
+        totalPages
+      });
     } catch (error) {
       console.error(error);
       res.render('error', { mensaje: 'Error al listar usuarios' });

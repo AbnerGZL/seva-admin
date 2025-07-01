@@ -30,7 +30,6 @@ Profesor.hasMany(Curso, { foreignKey: 'ID_PROFESOR', as: 'cursos' });
 
 // Relaciones de Curso
 Curso.belongsTo(Profesor, { foreignKey: 'ID_PROFESOR', as: 'profesor' });
-Curso.hasMany(Nota, { foreignKey: 'ID_CURSO', as: 'notas' });
 
 // Relaciones de Carrera
 Carrera.hasMany(Matricula, { foreignKey: 'ID_CARRERA', as: 'matriculas' });
@@ -39,13 +38,11 @@ Carrera.hasMany(Matricula, { foreignKey: 'ID_CARRERA', as: 'matriculas' });
 Matricula.belongsTo(Estudiante, { foreignKey: 'ID_ESTUDIANTE', as: 'estudiante' });
 Matricula.belongsTo(Carrera, { foreignKey: 'ID_CARRERA', as: 'carrera' });
 Matricula.hasMany(Pago, { foreignKey: 'ID_MATRICULA', as: 'pagos' });
-Matricula.hasMany(Nota, { foreignKey: 'ID_MATRICULA', as: 'notas' });
-Matricula.hasMany(Asistencia, { foreignKey: 'ID_MATRICULA', as: 'asistencias' });
+// Matricula.hasMany(Nota, { foreignKey: 'ID_MATRICULA', as: 'notas' });
+// Matricula.hasMany(Asistencia, { foreignKey: 'ID_MATRICULA', as: 'asistencias' });
 Matricula.hasMany(Cronograma, { foreignKey: 'ID_MATRICULA', as: 'cronogramas' });
 
 // Relaciones de Nota
-Nota.belongsTo(Curso, { foreignKey: 'ID_CURSO', as: 'curso' });
-Nota.belongsTo(Matricula, { foreignKey: 'ID_MATRICULA', as: 'matricula' });
 Nota.belongsTo(Cronograma, { foreignKey: 'ID_CRONOGRAMA', as: 'cronograma' });
 Nota.hasMany(NotaDetalle, { foreignKey: 'ID_NOTA', as: 'detalles' });
 
@@ -53,7 +50,7 @@ Nota.hasMany(NotaDetalle, { foreignKey: 'ID_NOTA', as: 'detalles' });
 NotaDetalle.belongsTo(Nota, { foreignKey: 'ID_NOTA', as: 'nota' });
 
 // Relaciones de Asistencia
-Asistencia.belongsTo(Matricula, { foreignKey: 'ID_MATRICULA', as: 'matricula' });
+// Asistencia.belongsTo(Matricula, { foreignKey: 'ID_MATRICULA', as: 'matricula' });
 Asistencia.belongsTo(Cronograma, { foreignKey: 'ID_CRONOGRAMA', as: 'cronograma' });
 
 // Relaciones de Pago
@@ -77,5 +74,5 @@ module.exports = {
   Matricula,
   Pago,
   Asistencia,
-  Cronograma,
+  Cronograma,
 };
